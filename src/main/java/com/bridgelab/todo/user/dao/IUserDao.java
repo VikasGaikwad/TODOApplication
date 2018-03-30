@@ -19,6 +19,8 @@ public interface IUserDao {
 
 	User sendingMail(User user);
 
+	User getUserByEmail(String email);
+
 
 
 }

@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.notes.service;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,47 +21,38 @@ public class NotesServiceImpl implements INotesService {
 
 	@Autowired
 	INotesDao notesDao;
-	
+
 	@Autowired
 	IUserDao userDao;
 
 	@Transactional
 	@Override
-	public int createNote(Notes notes,User user) {
-		System.out.println("********NotesServiceImpl*********");
-		System.out.println("userId - " +user.getUserId());
-		System.out.println("user email - "+user.getEmail());
-		
+	public void createNote(Notes notes, User user) {
+
+		Date createdDate = new Date();
+		notes.setCreatedDate(createdDate);
 		notes.setUser(user);
-		return notesDao.createNote(notes);
+		notesDao.createNote(notes);
 
 	}
 
 	public void updateNotes(Notes notes, long noteId) {
+		Date updatedDate = new Date();
+		notes.setUpdatedDate(updatedDate);
 
 		notesDao.updateNotes(notes, noteId);
 	}
 
-	
-
 	@Override
 	public void deleteNotes(long noteId) {
 		notesDao.deleteNotes(noteId);
-		
+
 	}
-
-	
-
-	
 
 	@Override
 	public Notes getNoteById(long noteId) {
-		
+
 		return notesDao.getNoteById(noteId);
 	}
-
-	
-
-	
 
 }

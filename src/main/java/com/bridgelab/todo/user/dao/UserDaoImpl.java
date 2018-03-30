@@ -23,47 +23,45 @@ public class UserDaoImpl implements IUserDao {
 	private SessionFactory sessionFactory;
 
 	public int registerUser(User user) {
-		System.out.println("in user dao");
-		 session =sessionFactory.openSession();
-				long id = (long) session.save(user);
-				System.out.println("dao return"+id);
+
+		session = sessionFactory.openSession();
+		long id = (long) session.save(user);
 		return (int) id;
 
 	}
 
 	@Override
 	public User loginUser(User user1) {
-		
+
 		session = sessionFactory.openSession();
-		Criteria criteria=session.createCriteria(User.class);
-		Criterion email=Restrictions.eq("email", user1.getEmail());
-		Criterion password=Restrictions.eq("password", user1.getPassword());
-		Criterion criterian=Restrictions.and(email, password);
+		Criteria criteria = session.createCriteria(User.class);
+		Criterion email = Restrictions.eq("email", user1.getEmail());
+		Criterion password = Restrictions.eq("password", user1.getPassword());
+		Criterion criterian = Restrictions.and(email, password);
 		criteria.add(criterian);
-		 user1=(User) criteria.uniqueResult();
-		 System.out.println(user1.getEmail()+"   "+user1.getPassword());
-		 
-		 
+		user1 = (User) criteria.uniqueResult();
+		System.out.println(user1.getEmail() + "   " + user1.getPassword());
+
 		return user1;
 
-		
 	}
-
-	
 
 	@Override
 	public User getUserById(long userId) {
-		
+
 		return (User) sessionFactory.openSession().get(User.class, userId);
 	}
 
 	@Override
 	public User sendingMail(User user) {
-		
+
 		return (User) sessionFactory.openSession().get(User.class, user.getEmail());
 	}
 
-	
-	
+	@Override
+	public User getUserByEmail(String email) {
+		
+		return (User) sessionFactory.openSession().get(User.class, email);
+	}
 
 }

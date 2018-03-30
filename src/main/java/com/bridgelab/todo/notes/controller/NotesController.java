@@ -31,8 +31,7 @@ public class NotesController {
 	@RequestMapping(value = "createnote", method = RequestMethod.POST)
 	public ResponseEntity<?> newNote(@RequestBody Notes notes, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("userObjectSession");
-		System.out.println("******NotesController******");
-		System.out.println("userId - "+user.getUserId()+"\nuserEmail = "+user.getEmail());
+		
 		notesService.createNote(notes,user);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}

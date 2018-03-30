@@ -3,7 +3,7 @@
  */
 package com.bridgelab.todo.notes.dao;
 
-import java.util.List;
+import java.util.Date;
 
 import com.bridgelab.todo.notes.model.Notes;
 

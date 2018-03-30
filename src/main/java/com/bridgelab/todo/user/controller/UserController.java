@@ -23,51 +23,38 @@ import com.bridgelab.todo.user.util.Validator;
  * @author bridgeit
  *
  */
-@RequestMapping(value="users")
 @RestController
+@RequestMapping(value = "users")
 public class UserController {
 	@Autowired
 	IUserService userService;
 
-	
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ResponseEntity<?> registerUser(@RequestBody User user) {
-		String username = user.getUsername();
-		String email = user.getEmail();
-		String password = user.getPassword();
+	public ResponseEntity<?> registerUser(@RequestBody User user,HttpServletRequest request) {
 
-		if (Validator.validate(username) == true) {
+		if (Validator.validate(user.getUsername()) == true && Validator.validateEmail(user.getEmail()) == true
+				&& Validator.validatePassword(user.getPassword()) == true) {
 
-			if (Validator.validateEmail(email) == true) {
+			try {
+				String url = request.getRequestURL().toString().substring(0, request.getRequestURL().lastIndexOf("/"));
 
-				if (Validator.validatePassword(password) == true) {
+				userService.registerUser(user, url);
 
-					try {
-						userService.registerUser(user);
+				return new ResponseEntity<String>("registered successfully", HttpStatus.OK);
 
-						return new ResponseEntity<String>(HttpStatus.OK);
-						
-					} catch (Exception e) {
-						return new ResponseEntity<String>(HttpStatus.CONFLICT);
-
-					}
-
-				}
+			} catch (Exception e) {
+				return new ResponseEntity<String>("email,password,name--convention error",HttpStatus.CONFLICT);
 
 			}
-		}
 
-		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<String>("something went wrong",HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> userLog(@RequestBody User user,HttpServletRequest request) {
+	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request) {
 		try {
-			User user2 =userService.loginUser(user);
-			HttpSession userLoginSession=request.getSession();
-			userLoginSession.setAttribute("userObjectSession", user2);
-			System.out.println("*******UserController*******");
-			System.out.println("userId - "+userLoginSession.getId());
 			return new ResponseEntity<String>(HttpStatus.OK);
 		} catch (Exception e) {
 
@@ -75,7 +62,9 @@ public class UserController {
 		}
 
 	}
-	@RequestMapping(value = "getuser/{userId}", method = RequestMethod.GET)
+	
+
+	@RequestMapping(value = "{userId}/getuser", method = RequestMethod.GET)
 	public ResponseEntity<User> getUser(@PathVariable("userId") long userId) {
 
 		System.out.println(userId);
@@ -83,5 +72,10 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
 	}
-	
+	@RequestMapping(value="/getbyemail/{email}",method=RequestMethod.GET)
+	public ResponseEntity<User> getemail(@PathVariable("email") String email){
+		User user=userService.getUserByEmail(email);
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+
 }

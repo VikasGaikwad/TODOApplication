@@ -25,6 +25,13 @@ import com.bridgelab.todo.notes.model.Notes;
 @Table(name="registration")
 public class User implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column
@@ -41,8 +48,8 @@ public class User implements Serializable {
 	
 	@OneToMany(mappedBy="user")
 	private Set<Notes> notes;
-	
-	
+	@Column
+	private String randomUUID;
 
 	public User() {
 
@@ -86,6 +93,14 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRandomUUID() {
+		return randomUUID;
+	}
+
+	public void setRandomUUID(String randomUUID) {
+		this.randomUUID = randomUUID;
 	}
 
 }

@@ -42,11 +42,11 @@ public class Notes implements Serializable {
 	@Column
 	private String description;
 	
-	/*@Column
+	@Column
 	private Date createdDate;
 	
 	@Column
-	private Date updatedDate;*/
+	private Date updatedDate;
 	
 	@ManyToOne
 	@JoinColumn(name="id")
@@ -61,8 +61,8 @@ public class Notes implements Serializable {
 		this.noteId = noteId;
 		this.title = title;
 		this.description = description;
-		/*this.createdDate = createdDate;
-		this.updatedDate = updatedDate;*/
+		this.createdDate = createdDate;
+		this.updatedDate = updatedDate;
 	}
 
 	public long getNoteId() {
@@ -97,7 +97,7 @@ public class Notes implements Serializable {
 		this.user = user;
 	}
 
-	/*public Date getCreatedDate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 
@@ -111,6 +111,6 @@ public class Notes implements Serializable {
 
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
-	}*/
+	}
 
 }

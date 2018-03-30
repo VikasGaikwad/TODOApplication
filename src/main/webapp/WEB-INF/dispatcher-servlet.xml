@@ -45,28 +45,33 @@
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="mySessionFactory"></property>
 	</bean>
-	
+
 
 	<bean id="mailSending" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com"></property>
-		<property name="port" value="587"></property>
+		<property name="port" value="25"></property>
 		<property name="username" value="vikas343430@gmail.com"></property>
 		<property name="password" value="vikas@123456"></property>
 
 		<property name="javaMailProperties">
 			<props>
-			 <prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.transport.protocol">smtp</prop>
 				<prop key="mail.smtp.auth">true</prop>
 				<prop key="mail.smtp.starttls.enable">true</prop>
-				 <prop key="mail.debug">true</prop>
+				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
 	</bean>
-	
-	
+
+
 	<bean id="mailService" class="com.bridgelab.todo.user.util.Mail">
-	<property name="mailSending" ref="mailSending"></property>	
+		<property name="mailSending" ref="mailSending"></property>
 	</bean>
+
+
+
+	<bean id="encryptEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
 
 
