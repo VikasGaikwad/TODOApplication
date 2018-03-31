@@ -50,18 +50,28 @@ public class User implements Serializable {
 	private Set<Notes> notes;
 	@Column
 	private String randomUUID;
+	@Column
+	private boolean status;
 
 	public User() {
 
 	}
 
-	public User(long userId, String username, String email, String password) {
+	
+
+	public User(long userId, String username, String email, String password, Set<Notes> notes, String randomUUID,
+			boolean status) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.notes = notes;
+		this.randomUUID = randomUUID;
+		this.status = status;
 	}
+
+
 
 	public long getUserId() {
 		return userId;
@@ -101,6 +111,14 @@ public class User implements Serializable {
 
 	public void setRandomUUID(String randomUUID) {
 		this.randomUUID = randomUUID;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 }

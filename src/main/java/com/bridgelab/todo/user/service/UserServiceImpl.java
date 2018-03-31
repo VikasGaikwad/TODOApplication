@@ -5,8 +5,11 @@ package com.bridgelab.todo.user.service;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.user.dao.IUserDao;
@@ -30,7 +33,7 @@ public class UserServiceImpl implements IUserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public void registerUser(User user, String requestUrl) {
+	public void registerUser(User user, String emailVerificationUrl) {
 
 		String hashCode = passwordEncoder.encode(user.getPassword());
 
@@ -41,12 +44,12 @@ public class UserServiceImpl implements IUserService {
 		int id = userDao.registerUser(user);
 		System.out.println("record number " + id);
 		if (id > 0) {
-			String to = user.getEmail();			
+			String to = user.getEmail();
 			String from = "vikas343430@gmail.com";
-			String message = requestUrl + "/RegistrationConfirm/"+ randomUUID;
-			String subject="click to activate account";
+			String message = emailVerificationUrl + "/RegistrationConfirm/" + randomUUID;
+			String subject = "click to activate account";
 
-			mailService.sendMail(to, from, message,subject);
+			mailService.sendMail(to, from, message, subject);
 		}
 
 		/*
@@ -78,6 +81,47 @@ public class UserServiceImpl implements IUserService {
 	public User getUserByEmail(String email) {
 
 		return userDao.getUserByEmail(email);
+	}
+
+	@Override
+	public void forgotPassword(User user, String forgotPasswordUrl) {
+
+		user = userDao.getUserByEmail(forgotPasswordUrl/* email */);
+		if (user != null) {
+			String emailId = user.getEmail();
+			String randomUUID = UUID.randomUUID().toString();
+
+			String to = user.getEmail();
+			String from = "vikas343430@gmail.com";
+			String subject = "Link to reset password";
+			String message = forgotPasswordUrl + "/resetPassword/" + randomUUID;
+
+			mailService.sendMail(to, from, message, subject);
+		}
+	}
+
+	@Override
+	public String getUserEmailId(String randomUUID) {
+		String email = userDao.getUserEmailId(randomUUID);
+		return email;
+	}
+
+	@Override
+	public boolean resetPassword(User user) {
+		User userObj = new User();
+		userObj.setEmail(user.getEmail());
+		userObj.setPassword(user.getPassword());
+		boolean status = userDao.resetPassword(user.getUsername(), user.getPassword());
+		return status;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void activateAccount(String randomUUID, HttpServletRequest request) {
+		User user = userDao.getUserByRandomId(randomUUID);
+		user.setStatus(true);
+		User user2 = userDao.updateRecord(user);
+
 	}
 
 }

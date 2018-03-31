@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.user.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bridgelab.todo.user.model.User;
 
 /**
@@ -10,11 +12,18 @@ import com.bridgelab.todo.user.model.User;
  *
  */
 public interface IUserService {
-	public void registerUser(User user,String requestUrl);
+	public void registerUser(User user,String emailVerificationUrl);
 	public User loginUser(User user);	
 	User getUserById(long userId);
 	public User sendingMail(User user);
 	public User getUserByEmail(String email);
+	public void forgotPassword(User user,String forgotPasswordUrl);
+	
+	
+	public String getUserEmailId(String randomUUID);
+	public boolean resetPassword(User user);
+	public void activateAccount(String randomUUID, HttpServletRequest request);
+	
 
 	
 

@@ -21,6 +21,14 @@ public interface IUserDao {
 
 	User getUserByEmail(String email);
 
+	String getUserEmailId(String randomUUID);
+
+	boolean resetPassword( String username,String password);
+
+	User getUserByRandomId(String randomUUID);
+
+	User updateRecord(User user);
+
 
 
 }
