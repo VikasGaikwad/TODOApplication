@@ -4,11 +4,13 @@
 package com.bridgelab.todo.user.dao;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.user.model.User;
 
@@ -36,7 +38,7 @@ public class UserDaoImpl implements IUserDao {
 		}
 
 	}
-
+	@Transactional
 	@Override
 	public User loginUser(User user1) {
 
@@ -64,6 +66,7 @@ public class UserDaoImpl implements IUserDao {
 		}
 
 	}
+	@Transactional
 
 	@Override
 	public User getUserById(long userId) {
@@ -71,27 +74,22 @@ public class UserDaoImpl implements IUserDao {
 		return (User) sessionFactory.getCurrentSession().get(User.class, userId);
 	}
 
-
-
+	@Transactional
 	@Override
 	public User getUserByEmail(String email) {
-		System.out.println(email);
-		return null;
-		
-		/*Criteria criteria = session.get
-		Criterion email = Restrictions.eq("email", user1.getEmail());
-		
-		
-		return */
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("email", email));
+		User user = (User) criteria.uniqueResult();
+		return user;
 	}
-
-
 
 	@Override
 	public User sendingMail(User user) {
 
 		return (User) sessionFactory.getCurrentSession().get(User.class, user.getEmail());
 	}
+	@Transactional
 	@Override
 	public String getUserEmailId(String randomUUID) {
 		System.out.println("id "+randomUUID);
@@ -106,16 +104,21 @@ public class UserDaoImpl implements IUserDao {
 
 		
 	}
-	
+	@Transactional
 
 	@Override
-	public boolean resetPassword(String username, String password) {
-		int rowCount = 0;
-		String sqlUpdate = "update User set password=? where username=?";
-
+	public boolean resetPassword(String randomUUID, String password) {
+		User user = null;
+		//session.update(user);
+		sessionFactory.openSession();
+		Query query=session.createQuery("update User set password=:password where randomUUID=:randomUUID");
+		query.setParameter("password", user.getPassword());
+		query.setParameter("randomUUID", user.getRandomUUID());
+		query.executeUpdate();
+		System.out.println("Record updated...");
 		return true;
 	}
-
+	@Transactional
 	public User getUserByRandomId(String randomUUID) {
 
 		System.out.println("id " + randomUUID);
@@ -127,7 +130,7 @@ public class UserDaoImpl implements IUserDao {
 		System.out.println("email id "+user.getEmail());
 		return user;
 	}
-
+	@Transactional
 	@Override
 	public User updateRecord(User user) {
 

@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelab.todo.user.model.User;
@@ -47,10 +48,10 @@ import com.bridgelab.todo.user.util.Validator;
  * @since 2018-03-20
  * @author Bridgelabz
  * @author Vikas Gaikwad
- */
+ **/
 
 @RestController
-@RequestMapping(value = "users")
+//@RequestMapping(value = "users")
 public class UserController {
 	@Autowired
 	IUserService userService;
@@ -110,25 +111,24 @@ public class UserController {
 
 	
 
-	@RequestMapping(value = "{userId}/getuser", method = RequestMethod.GET)
+	@RequestMapping(value = "/getuser/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
 		User user = userService.getUserById(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
 	}	
-//problem in method
-	@RequestMapping(value = "/getbyemail", method = RequestMethod.POST)
-	public ResponseEntity<User> getemail(@RequestBody User user ){
-		User userDetail = userService.getUserByEmail(user.getEmail());
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+	
+	@RequestMapping(value = "/getuserbyemail", method = RequestMethod.POST)
+	public User getUserByEmail(@RequestBody User user) {
+		User user1 = userService.getUserByEmail(user.getEmail());
+		return user1;
 	}
-
-	@RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
-	public ResponseEntity<String> forgotPassword(@RequestBody User user, HttpServletRequest request) {
-		String forgotPasswordUrl = request.getRequestURL().toString().substring(0,
-				request.getRequestURL().lastIndexOf("/"));
-		userService.forgotPassword(user, forgotPasswordUrl);
-		return new ResponseEntity<String>("mail sent successfully", HttpStatus.OK);
+	
+	@RequestMapping(value="/forgotpassword", method=RequestMethod.POST)
+	public ResponseEntity<String> forgotPassword(@RequestBody User user,HttpServletRequest request){
+		String forgotPasswordURL=request.getRequestURL().toString().substring(0,request.getRequestURL().lastIndexOf("/"));
+		userService.forgotPassword(user, forgotPasswordURL);
+		return new ResponseEntity<String>("link sent successfully",HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/resetPassword/{randomUUID}", method = RequestMethod.POST)

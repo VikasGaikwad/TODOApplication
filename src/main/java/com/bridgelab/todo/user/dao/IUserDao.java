@@ -23,7 +23,7 @@ public interface IUserDao {
 
 	String getUserEmailId(String randomUUID);
 
-	boolean resetPassword( String username,String password);
+	boolean resetPassword( String randomUUID,String password);
 
 	User getUserByRandomId(String randomUUID);
 
