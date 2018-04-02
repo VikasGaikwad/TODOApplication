@@ -18,6 +18,9 @@ import com.bridgelab.todo.user.util.Mail;
 import com.bridgelab.todo.user.util.Validator;
 
 /**
+ * <b>{@link PasswordEncoder }</b> this Interface is Service interface for encoding passwords.
+ * The preferred implementation is BCryptPasswordEncoder.
+ * 
  * @author bridgeit
  *
  */
@@ -32,9 +35,20 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	/*
+	 *  <b>{@link Transactional @Transactional}</b>	Transactional annotation provides the 
+	 *  application the ability to declaratively control transaction boundaries.
+	 */	
+
+	/* (non-Javadoc)
+	 * @see com.bridgelab.todo.user.service.IUserService#registerUser(com.bridgelab.todo.user.model.User, java.lang.String)
+	 */
 	@Transactional
 	public void registerUser(User user, String emailVerificationUrl) {
-
+		/*
+		 * java.util.UUID- A UUID class that represents an immutable universally unique identifier (UUID).
+		 * A UUID represents a 128-bit value.
+		 * */
 		String hashCode = passwordEncoder.encode(user.getPassword());
 
 		user.setPassword(hashCode);
@@ -46,7 +60,7 @@ public class UserServiceImpl implements IUserService {
 		if (id > 0) {
 			String to = user.getEmail();
 			String from = "vikas343430@gmail.com";
-			String message = emailVerificationUrl + "/RegistrationConfirm/" + randomUUID;
+			String message = emailVerificationUrl + "/activateaccount/" + randomUUID;
 			String subject = "click to activate account";
 
 			mailService.sendMail(to, from, message, subject);
@@ -65,7 +79,7 @@ public class UserServiceImpl implements IUserService {
 		return userDao.loginUser(user);
 	}
 
-	@Override
+	@Transactional
 	public User getUserById(long userId) {
 
 		return userDao.getUserById(userId);
@@ -77,7 +91,7 @@ public class UserServiceImpl implements IUserService {
 		return userDao.sendingMail(user);
 	}
 
-	@Override
+	@Transactional
 	public User getUserByEmail(String email) {
 
 		return userDao.getUserByEmail(email);

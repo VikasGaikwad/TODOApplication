@@ -24,9 +24,16 @@ public class UserDaoImpl implements IUserDao {
 
 	public int registerUser(User user) {
 
-		session = sessionFactory.openSession();
-		long id = (long) session.save(user);
-		return (int) id;
+		try {
+			session = sessionFactory.openSession();
+			long id = (long) session.save(user);
+
+			return (int) id;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
 
 	}
 
@@ -34,15 +41,27 @@ public class UserDaoImpl implements IUserDao {
 	public User loginUser(User user1) {
 
 		session = sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(User.class);
-		Criterion email = Restrictions.eq("email", user1.getEmail());
-		Criterion password = Restrictions.eq("password", user1.getPassword());
-		Criterion criterian = Restrictions.and(email, password);
-		criteria.add(criterian);
-		user1 = (User) criteria.uniqueResult();
-		System.out.println(user1.getEmail() + "   " + user1.getPassword());
 
-		return user1;
+
+		try {
+			Criteria criteria = session.createCriteria(User.class);
+			Criterion email = Restrictions.eq("email", user1.getEmail());
+			Criterion password = Restrictions.eq("password", user1.getPassword());
+			Criterion criterian = Restrictions.and(email, password);
+			criteria.add(criterian);
+			user1 = (User) criteria.uniqueResult();
+			System.out.println("login success with ");
+			System.out.println("user email - " + user1.getEmail() + "  \n" + "user password -" + user1.getPassword());
+
+			return user1;
+		} catch (Exception e) {
+			System.out.println("login failed with ");
+			System.out.println("user email - " + user1.getEmail() + "  \n " + "user password -" + user1.getPassword());
+			System.out.println("try with correct credentials..");
+			throw e;
+		} finally {
+			session.close();
+		}
 
 	}
 
@@ -52,51 +71,70 @@ public class UserDaoImpl implements IUserDao {
 		return (User) sessionFactory.getCurrentSession().get(User.class, userId);
 	}
 
+
+
+	@Override
+	public User getUserByEmail(String email) {
+		System.out.println(email);
+		return null;
+		
+		/*Criteria criteria = session.get
+		Criterion email = Restrictions.eq("email", user1.getEmail());
+		
+		
+		return */
+	}
+
+
+
 	@Override
 	public User sendingMail(User user) {
 
 		return (User) sessionFactory.getCurrentSession().get(User.class, user.getEmail());
 	}
-
-	@Override
-	public User getUserByEmail(String email) {
-		
-		return (User) sessionFactory.getCurrentSession().get(User.class, email);
-	}
-
 	@Override
 	public String getUserEmailId(String randomUUID) {
-		 String sql="select email from User where randomUUID=?";
-		return sql;
+		System.out.println("id "+randomUUID);
+
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("randomUUID", randomUUID));
+		User user = (User) criteria.uniqueResult();
+		return randomUUID;
+
+		
+
+		
 	}
+	
 
 	@Override
 	public boolean resetPassword(String username, String password) {
-		int rowCount=0;
-		String sqlUpdate="update User set password=? where username=?";
-		
+		int rowCount = 0;
+		String sqlUpdate = "update User set password=? where username=?";
+
 		return true;
 	}
 
 	public User getUserByRandomId(String randomUUID) {
 
-		System.out.println("id "+randomUUID);
+		System.out.println("id " + randomUUID);
 
-		Session session =sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
-		User user = (User) criteria.uniqueResult();		
+		User user = (User) criteria.uniqueResult();
+		System.out.println("email id "+user.getEmail());
 		return user;
-		}
+	}
 
-	
 	@Override
 	public User updateRecord(User user) {
-	
-	Session session = sessionFactory.getCurrentSession();
-	session.update(user);
-	System.out.println("Record updated...");
-	return user; 
 
-}
+		Session session = sessionFactory.getCurrentSession();
+		session.update(user);
+		System.out.println("Record updated...");
+		return user;
+
+	}
 }
