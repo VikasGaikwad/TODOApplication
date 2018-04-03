@@ -40,7 +40,7 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public int createNote(Notes notes) {
 		
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		long notedata = (long) session.save(notes);
 		System.out.println("created date-----"+notes.getCreatedDate());
 		return (int) notedata;

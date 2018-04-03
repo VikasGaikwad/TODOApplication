@@ -5,10 +5,12 @@ package com.bridgelab.todo.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,12 +53,11 @@ import com.bridgelab.todo.user.util.Validator;
  **/
 
 @RestController
-//@RequestMapping(value = "users")
+// @RequestMapping(value = "users")
 public class UserController {
 	@Autowired
 	IUserService userService;
 
-	
 	/**
 	 * @param user
 	 * @param request
@@ -85,22 +86,30 @@ public class UserController {
 
 		return new ResponseEntity<String>("something went wrong", HttpStatus.BAD_REQUEST);
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request) {
+	public ResponseEntity<String> userLog(@RequestBody User user,HttpServletRequest request) {
 		try {
-			userService.loginUser(user);
-			return new ResponseEntity<String>(HttpStatus.OK);
+			User user2 = userService.getUserByEmail(user.getEmail());
+			boolean decPassword = BCrypt.checkpw(user.getPassword(), user2.getPassword());//not working
+			if (decPassword == true) {
+				userService.loginUser(user);
+				
+				
+				HttpSession session=request.getSession();
+				session.setAttribute("userId", user2);
+				
+				
+				
+				return new ResponseEntity<String>("login success", HttpStatus.OK);
+			}
 		} catch (Exception e) {
 
-			return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("password not matched", HttpStatus.CONFLICT);
 		}
+		return null;
 
 	}
-	
-	
 
 	@RequestMapping(value = "/activateaccount/{randomUUID}", method = RequestMethod.GET)
 	public ResponseEntity<Void> activateAccount(@PathVariable("randomUUID") String randomUUID,
@@ -109,33 +118,34 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	
-
 	@RequestMapping(value = "/getuser/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
 		User user = userService.getUserById(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
-	}	
-	
+	}
+
 	@RequestMapping(value = "/getuserbyemail", method = RequestMethod.POST)
 	public User getUserByEmail(@RequestBody User user) {
 		User user1 = userService.getUserByEmail(user.getEmail());
 		return user1;
 	}
-	
-	@RequestMapping(value="/forgotpassword", method=RequestMethod.POST)
-	public ResponseEntity<String> forgotPassword(@RequestBody User user,HttpServletRequest request){
-		String forgotPasswordURL=request.getRequestURL().toString().substring(0,request.getRequestURL().lastIndexOf("/"));
+
+	@RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
+	public ResponseEntity<String> forgotPassword(@RequestBody User user, HttpServletRequest request) {
+		String forgotPasswordURL = request.getRequestURL().toString().substring(0,
+				request.getRequestURL().lastIndexOf("/"));
 		userService.forgotPassword(user, forgotPasswordURL);
-		return new ResponseEntity<String>("link sent successfully",HttpStatus.OK);
+		return new ResponseEntity<String>("link sent successfully", HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/resetPassword/{randomUUID}", method = RequestMethod.POST)
-	public ResponseEntity<String> resetPassword(@RequestBody User user, @PathVariable("randomUUID") String randomUUID) {
-		String email = userService.getUserEmailId(randomUUID);
-		user.setEmail(email);
-		userService.resetPassword(user);
+	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("randomUUID") String randomUUID) {
+
+		User userobj = userService.getObjByUUID(randomUUID);
+		// userobj.setEmail(userobj.getEmail());
+
+		userService.resetPassword(userobj, user);
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 
 	}

@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.user.model.User;
@@ -48,22 +49,23 @@ public class UserDaoImpl implements IUserDao {
 		try {
 			Criteria criteria = session.createCriteria(User.class);
 			Criterion email = Restrictions.eq("email", user1.getEmail());
+		
 			Criterion password = Restrictions.eq("password", user1.getPassword());
 			Criterion criterian = Restrictions.and(email, password);
 			criteria.add(criterian);
 			user1 = (User) criteria.uniqueResult();
 			System.out.println("login success with ");
-			System.out.println("user email - " + user1.getEmail() + "  \n" + "user password -" + user1.getPassword());
+			//System.out.println("user email - " + user1.getEmail() + "  \n" + "user password -" + user1.getPassword());
 
 			return user1;
 		} catch (Exception e) {
 			System.out.println("login failed with ");
-			System.out.println("user email - " + user1.getEmail() + "  \n " + "user password -" + user1.getPassword());
 			System.out.println("try with correct credentials..");
-			throw e;
+			//throw e;
 		} finally {
 			session.close();
 		}
+		return user1;
 
 	}
 	@Transactional
@@ -89,16 +91,18 @@ public class UserDaoImpl implements IUserDao {
 
 		return (User) sessionFactory.getCurrentSession().get(User.class, user.getEmail());
 	}
-	@Transactional
 	@Override
-	public String getUserEmailId(String randomUUID) {
-		System.out.println("id "+randomUUID);
+	public User getObjByUUID(String randomUUID) {
+		
 
 		Session session = sessionFactory.getCurrentSession();
+		
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
-		User user = (User) criteria.uniqueResult();
-		return randomUUID;
+	
+	User user3 =(User) criteria.uniqueResult();
+		System.out.println("userdaoimpl..........."+user3.getRandomUUID());
+		return user3;
 
 		
 
@@ -110,10 +114,10 @@ public class UserDaoImpl implements IUserDao {
 	public boolean resetPassword(String randomUUID, String password) {
 		User user = null;
 		//session.update(user);
-		sessionFactory.openSession();
+		session=sessionFactory.openSession();
 		Query query=session.createQuery("update User set password=:password where randomUUID=:randomUUID");
-		query.setParameter("password", user.getPassword());
-		query.setParameter("randomUUID", user.getRandomUUID());
+		query.setParameter("password", password);
+		query.setParameter("randomUUID",randomUUID);
 		query.executeUpdate();
 		System.out.println("Record updated...");
 		return true;

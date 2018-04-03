@@ -21,7 +21,7 @@ public interface IUserDao {
 
 	User getUserByEmail(String email);
 
-	String getUserEmailId(String randomUUID);
+	User getObjByUUID(String randomUUID);
 
 	boolean resetPassword( String randomUUID,String password);
 

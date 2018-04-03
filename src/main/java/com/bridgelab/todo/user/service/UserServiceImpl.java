@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,8 +80,12 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public User loginUser(User user) {
-
-		return userDao.loginUser(user);
+		
+		User user2 =  userDao.loginUser(user);
+		//User userDB=userDao.getUserByEmail(user.getEmail());
+		//User userDB=dao.getUserByEmail(user.getEmail())
+		//BCrypt.checkpw(user.getPassword(),userDB.getPassword());
+		return user2;
 	}
 
 	@Transactional
@@ -103,36 +108,37 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public void forgotPassword(User user, String forgotPasswordUrl) {
-System.out.println("before of --userDao.getUserByEmail(user.getEmail())-- method");
+		System.out.println("before of --userDao.getUserByEmail(user.getEmail())-- method");
 		user = userDao.getUserByEmail(user.getEmail());
-		System.out.println("after of --userDao.getUserByEmail(user.getEmail())-- method");
+		System.out.println("UUID of user sending on mail" + user.getRandomUUID());
 		if (user != null) {
-			String emailId = user.getEmail();
-			String randomUUID = UUID.randomUUID().toString();
 
+			String randomUUID = user.getRandomUUID();
 			String to = user.getEmail();
 			String from = "vikas343430@gmail.com";
 			String subject = "Link to reset password";
-			String message = forgotPasswordUrl+"/resetPassword/"+randomUUID;
+			String message = forgotPasswordUrl + "/resetPassword/" + randomUUID;
 			mailService.sendMail(to, from, message, subject);
-		} else {
-			System.out.println("user comes null in UserServiceImpl...");
-			
 		}
 	}
 
-	@Override
-	public String getUserEmailId(String randomUUID) {
-		String email = userDao.getUserEmailId(randomUUID);
-		return email;
+	@Transactional
+	public User getObjByUUID(String randomUUID) {
+		System.out.println("inside userserviceimpl" + randomUUID);
+		return userDao.getObjByUUID(randomUUID);
+
 	}
 
 	@Override
-	public boolean resetPassword(User user) {
+	public boolean resetPassword(User userobj, User user) {
 
-		user.setEmail(user.getEmail());
-		user.setPassword(user.getPassword());
-		boolean status = userDao.resetPassword(user.getRandomUUID(), user.getPassword());
+		System.out.println(userobj.getEmail());
+		System.out.println(userobj.getPassword());
+		System.out.println(userobj.getRandomUUID());
+
+		boolean status = userDao.resetPassword(userobj.getRandomUUID(), user.getPassword());
+		System.out.println("----------" + userobj.getEmail());
+		System.out.println("----------" + userobj.getPassword());
 		return status;
 	}
 

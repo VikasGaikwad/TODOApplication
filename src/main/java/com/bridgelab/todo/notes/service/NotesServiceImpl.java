@@ -28,7 +28,7 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public void createNote(Notes notes, User user) {
-
+System.out.println("user id------"+user.getUserId());
 		Date createdDate = new Date();
 		notes.setCreatedDate(createdDate);
 		notes.setUser(user);
@@ -37,8 +37,8 @@ public class NotesServiceImpl implements INotesService {
 	}
 
 	public void updateNotes(Notes notes, long noteId) {
-		Date updatedDate = new Date();
-		notes.setUpdatedDate(updatedDate);
+		//Date updatedDate = new Date();
+		//notes.setUpdatedDate(updatedDate);
 
 		notesDao.updateNotes(notes, noteId);
 	}

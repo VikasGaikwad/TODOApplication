@@ -8,6 +8,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,24 +46,23 @@ public class Notes implements Serializable {
 	@Column
 	private Date createdDate;
 	
-	@Column
-	private Date updatedDate;
 	
-	@ManyToOne
-	@JoinColumn(name="id")
+	
+	@ManyToOne/*(fetch=FetchType.LAZY)*/
+	@JoinColumn(name="userId")
 	private User user;
 
 	public Notes() {
 
 	}
 
-	public Notes(long noteId, String title, String description/*, Date createdDate, Date updatedDate*/) {
+	public Notes(long noteId, String title, String description) {
 
 		this.noteId = noteId;
 		this.title = title;
 		this.description = description;
 		this.createdDate = createdDate;
-		this.updatedDate = updatedDate;
+		
 	}
 
 	public long getNoteId() {
@@ -105,12 +105,6 @@ public class Notes implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public Date getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+	
 
 }

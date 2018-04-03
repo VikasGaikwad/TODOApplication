@@ -20,8 +20,8 @@ public interface IUserService {
 	public void forgotPassword(User user,String forgotPasswordUrl);
 	
 	
-	public String getUserEmailId(String randomUUID);
-	public boolean resetPassword(User user);
+	public User getObjByUUID(String randomUUID);
+	public boolean resetPassword(User userobj,User user);
 	public void activateAccount(String randomUUID, HttpServletRequest request);
 	
 
