@@ -98,6 +98,7 @@ public class UserController {
 				
 				HttpSession session=request.getSession();
 				session.setAttribute("userId", user2);
+				request.getAttribute("token_id");
 				
 				
 				

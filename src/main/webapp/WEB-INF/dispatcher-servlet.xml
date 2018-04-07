@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:context="http://www.springframework.org/schema/context"
-xmlns:mvc="http://www.springframework.org/schema/mvc"
-xmlns:tx="http://www.springframework.org/schema/tx" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans.xsd
    http://www.springframework.org/schema/mvc 
    http://www.springframework.org/schema/mvc/spring-mvc.xsd      
@@ -14,10 +13,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/tx 
    http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-<!-- bean definitions here -->
-<context:component-scan base-package="com.bridgeit"/>
-<mvc:annotation-driven />
-<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- bean definitions here -->
+	<context:component-scan base-package="com.bridgeit" />
+	<mvc:annotation-driven />
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
 
 	<context:component-scan base-package="com.bridgelab"></context:component-scan>
@@ -80,13 +79,18 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 	<bean id="mailService" class="com.bridgelab.todo.user.util.Mail">
 		<property name="mailSending" ref="mailSending"></property>
 	</bean>
-
-
-
 	<bean id="encryptEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" >
+		</bean>
+		
+		
 
-
+	<mvc:interceptors>
+	<mvc:interceptor>
+	<mvc:mapping path="/users/**"/>
+	<bean class="com.bridgelab.todo.user.util.InterceptorClass"></bean>
+	</mvc:interceptor>
+	</mvc:interceptors>
 
 
 
