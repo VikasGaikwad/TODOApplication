@@ -5,17 +5,14 @@ package com.bridgelab.todo.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,11 +55,6 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 
-	/**
-	 * @param user
-	 * @param request
-	 * @return
-	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
 
@@ -88,27 +80,31 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<String> userLog(@RequestBody User user,HttpServletRequest request) {
+	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request,
+			HttpServletResponse response) {
 		try {
 			User user2 = userService.getUserByEmail(user.getEmail());
-			boolean decPassword = BCrypt.checkpw(user.getPassword(), user2.getPassword());//not working
-			if (decPassword == true) {
-				userService.loginUser(user);
-				
-				
-				HttpSession session=request.getSession();
-				session.setAttribute("userId", user2);
-				request.getAttribute("token_id");
-				
-				
-				
-				return new ResponseEntity<String>("login success", HttpStatus.OK);
-			}
-		} catch (Exception e) {
 
-			return new ResponseEntity<String>("password not matched", HttpStatus.CONFLICT);
+			userService.loginUser(user.getEmail(), user.getPassword());
+
+			String token = userService.loginUser(user2.getEmail(), user2.getPassword());
+			if (token != null) {
+				response.setHeader("autherization", token);
+				return new ResponseEntity<String>("login success", HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<String>("password not matched", HttpStatus.CONFLICT);
+			}
+			// HttpSession session=request.getSession();
+			// session.setAttribute("userId", user2);
+
+			// HttpHeaders header=new HttpHeaders();
+			// header.set("header", tiken_id);
+
+		} catch (Exception e) {
+			return null;
+
 		}
-		return null;
 
 	}
 

@@ -25,10 +25,15 @@ public class NotesServiceImpl implements INotesService {
 	@Autowired
 	IUserDao userDao;
 
+	/*
+	 * @tTransactional - It is necessary that if you are interacting with the
+	 * database either to update or insert or delete you must need to perform this
+	 * with in a transaction. If any exception occurs in performing the transaction,
+	 * it rollbacks the other tasks executed in same transaction.
+	 */
 	@Transactional
 	@Override
 	public void createNote(Notes notes, User user) {
-System.out.println("user id------"+user.getUserId());
 		Date createdDate = new Date();
 		notes.setCreatedDate(createdDate);
 		notes.setUser(user);
@@ -36,13 +41,14 @@ System.out.println("user id------"+user.getUserId());
 
 	}
 
+	@Transactional
+	@Override
 	public void updateNotes(Notes notes, long noteId) {
-		//Date updatedDate = new Date();
-		//notes.setUpdatedDate(updatedDate);
 
 		notesDao.updateNotes(notes, noteId);
 	}
 
+	@Transactional
 	@Override
 	public void deleteNotes(long noteId) {
 		notesDao.deleteNotes(noteId);

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.user.dao.IUserDao;
 import com.bridgelab.todo.user.model.User;
+import com.bridgelab.todo.user.util.JWT_Tokens;
 import com.bridgelab.todo.user.util.Mail;
 import com.bridgelab.todo.user.util.Validator;
 
@@ -79,12 +80,15 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public User loginUser(User user) {
+	public String loginUser(String email, String password) {
+		User userObject=userDao.getUserByEmail(email);
+		String user2 =  userDao.loginUser(email,  password);
+		if(user2!=null && BCrypt.checkpw(password,userObject.getPassword())) {
+			int id= (int)userObject.getUserId();
+			String token=JWT_Tokens.createToken(id);
+			System.out.println("generated token---"+token);
+		}
 		
-		User user2 =  userDao.loginUser(user);
-		//User userDB=userDao.getUserByEmail(user.getEmail());
-		//User userDB=dao.getUserByEmail(user.getEmail())
-		//BCrypt.checkpw(user.getPassword(),userDB.getPassword());
 		return user2;
 	}
 
@@ -137,8 +141,6 @@ public class UserServiceImpl implements IUserService {
 		System.out.println(userobj.getRandomUUID());
 
 		boolean status = userDao.resetPassword(userobj.getRandomUUID(), user.getPassword());
-		System.out.println("----------" + userobj.getEmail());
-		System.out.println("----------" + userobj.getPassword());
 		return status;
 	}
 

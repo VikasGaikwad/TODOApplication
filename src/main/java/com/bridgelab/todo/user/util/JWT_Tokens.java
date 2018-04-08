@@ -29,11 +29,12 @@ public class JWT_Tokens {
 	 *            : access the parameter of type String.
 	 * @return generated token : id contains the generated token.
 	 */
-	public static String createToken(String id) {
+	public static String createToken(int id) {
 		/*
 		 * SignatureAlgorithm is used to sign the token.return the corresponding {@code
 		 * SignatureAlgorithm} enum instance based on a case
 		 */
+		@SuppressWarnings("unused")
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 		long currentTimeInMillis = System.currentTimeMillis();
 		Date currentDate = new Date(currentTimeInMillis);
@@ -46,7 +47,7 @@ public class JWT_Tokens {
 		 * used to create JWT compact serialized strings.
 		 */
 
-		JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(currentDate)
+		JwtBuilder builder = Jwts.builder().setId(Integer.toString(id)).setIssuedAt(currentDate)
 				.signWith(SignatureAlgorithm.HS256, SIGNIN_KEY).setExpiration(expireDate);
 		/*
 		 * compact() - When you are ready to give the token to your end user, you need

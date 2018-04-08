@@ -11,9 +11,11 @@ import com.bridgelab.todo.user.model.User;
  */
 public interface IUserDao {
 
+	
+
 	int registerUser(User user);
 
-	User loginUser(User user);
+	String loginUser(String email, String password);
 
 	User getUserById(long userId);
 
@@ -28,6 +30,8 @@ public interface IUserDao {
 	User getUserByRandomId(String randomUUID);
 
 	User updateRecord(User user);
+
+	String getUserPassword();
 
 
 

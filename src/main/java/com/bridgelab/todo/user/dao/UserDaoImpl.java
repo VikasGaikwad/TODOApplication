@@ -3,12 +3,16 @@
  */
 package com.bridgelab.todo.user.dao;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,31 +45,38 @@ public class UserDaoImpl implements IUserDao {
 	}
 	@Transactional
 	@Override
-	public User loginUser(User user1) {
+	public String loginUser(String email, String password) {
 
 		session = sessionFactory.openSession();
 
-
+//
 		try {
-			Criteria criteria = session.createCriteria(User.class);
-			Criterion email = Restrictions.eq("email", user1.getEmail());
+			/*Criteria criteria = session.createCriteria(User.class);
+			Criterion email_id = Restrictions.eq("email", email);
 		
-			Criterion password = Restrictions.eq("password", user1.getPassword());
-			Criterion criterian = Restrictions.and(email, password);
+			Criterion password1 = Restrictions.eq("password",password);
+			Criterion criterian = Restrictions.and(email_id, password1);
 			criteria.add(criterian);
-			user1 = (User) criteria.uniqueResult();
-			System.out.println("login success with ");
+			String list =  (String) criteria.uniqueResult();
+			System.out.println("login success");
 			//System.out.println("user email - " + user1.getEmail() + "  \n" + "user password -" + user1.getPassword());
+			return  list;*/
+			
+			Criteria cr = session.createCriteria(User.class)
+				    .setProjection(Projections.projectionList()
+				      .add(Projections.property("email"), "email")
+				      .add(Projections.property("password"), "password"))
+				    .setResultTransformer(Transformers.aliasToBean(User.class));
 
-			return user1;
+				  List<User> list = cr.list();
 		} catch (Exception e) {
-			System.out.println("login failed with ");
+			System.out.println("login failed");
 			System.out.println("try with correct credentials..");
 			//throw e;
 		} finally {
 			session.close();
 		}
-		return user1;
+		return null;
 
 	}
 	@Transactional
@@ -143,5 +154,10 @@ public class UserDaoImpl implements IUserDao {
 		System.out.println("Record updated...");
 		return user;
 
+	}
+	@Override
+	public String getUserPassword() {
+		
+		return null;
 	}
 }

@@ -3,8 +3,6 @@
  */
 package com.bridgelab.todo.notes.dao;
 
-import java.util.Date;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,38 +18,39 @@ import com.bridgelab.todo.notes.model.Notes;
 @Repository()
 public class NotesDaoImpl implements INotesDao {
 
-	
+	/*
+	 * Session Factory : This is factory of session objects. To create the session
+	 * factory object, we need to have configuration object to create session
+	 * factory.
+	 */
 	@Autowired
 	private SessionFactory sessionFactory;
 	protected Session session;
-	/*----------------------------------------------------------------------*/
+
+	/*
+	 * Session : It is basically a factory for Transaction, Query and Criteria. If
+	 * we want to use the any of them, we will need to get it from session.
+	 */
 	protected Session currentSession() {
 		return sessionFactory.getCurrentSession();
 	}
-/*	@Override
-	public void createNote(Notes notes) {
-		currentSession().save(notes);
-		
-		}*/
-	
-	
-	/*----------------------------------------------------------------------*/
 
 	@Override
 	public int createNote(Notes notes) {
-		
+
+		/* getCurrentSession()-Obtains the current session. */
 		session = sessionFactory.getCurrentSession();
+		/*
+		 * Persist the given transient instance, first assigning a generated identifier.
+		 */
 		long notedata = (long) session.save(notes);
-		System.out.println("created date-----"+notes.getCreatedDate());
 		return (int) notedata;
 
 	}
-	
-	
 
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
-		/*Session session = sessionFactory.openSession();*/
+		/* openSession() - btains the current session. */
 		sessionFactory.openSession();
 		Query query = (Query) session
 				.createQuery("update Notes  set title=:title,description=:description where noteId=:noteId");
@@ -61,13 +60,17 @@ public class NotesDaoImpl implements INotesDao {
 		query.executeUpdate();
 
 	}
-	
 
+	
 	@Override
 	public boolean deleteNotes(long noteId) {
 		session = sessionFactory.openSession();
 		try {
 			String sqlQuery = "delete from Notes where noteId=:noteId";
+			/*
+			 * Query : query is a class that provides methods to write HQL(Hibernate Query
+			 * Language) to perform the transaction.
+			 */
 			Query query = (Query) session.createQuery(sqlQuery);
 			query.setParameter("noteId", noteId);
 			query.executeUpdate();
@@ -81,7 +84,5 @@ public class NotesDaoImpl implements INotesDao {
 	public Notes getNoteById(long noteId) {
 		return (Notes) sessionFactory.openSession().get(Notes.class, noteId);
 	}
-	
-	
 
 }
