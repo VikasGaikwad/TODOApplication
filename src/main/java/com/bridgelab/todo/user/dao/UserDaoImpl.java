@@ -3,19 +3,13 @@
  */
 package com.bridgelab.todo.user.dao;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.user.model.User;
 
@@ -43,43 +37,39 @@ public class UserDaoImpl implements IUserDao {
 		}
 
 	}
-	@Transactional
+
 	@Override
-	public String loginUser(String email, String password) {
+	public User loginUser(User user) {
 
 		session = sessionFactory.openSession();
 
 //
 		try {
-			/*Criteria criteria = session.createCriteria(User.class);
-			Criterion email_id = Restrictions.eq("email", email);
-		
-			Criterion password1 = Restrictions.eq("password",password);
+			Criteria criteria = session.createCriteria(User.class);
+			Criterion email_id = Restrictions.eq("email", user.getEmail());
+
+			Criterion password1 = Restrictions.eq("password", user.getPassword());
+
 			Criterion criterian = Restrictions.and(email_id, password1);
 			criteria.add(criterian);
-			String list =  (String) criteria.uniqueResult();
-			System.out.println("login success");
-			//System.out.println("user email - " + user1.getEmail() + "  \n" + "user password -" + user1.getPassword());
-			return  list;*/
-			
-			Criteria cr = session.createCriteria(User.class)
-				    .setProjection(Projections.projectionList()
-				      .add(Projections.property("email"), "email")
-				      .add(Projections.property("password"), "password"))
-				    .setResultTransformer(Transformers.aliasToBean(User.class));
+			/*uniqueResult()-
+			 * Convenience method to return a single instance that matches the query, or
+			 * null if the query returns no results.
+			 */
+			User userObj = (User) criteria.uniqueResult();
+			System.out.println("login successfull");
 
-				  List<User> list = cr.list();
+			return userObj;
+
 		} catch (Exception e) {
 			System.out.println("login failed");
-			System.out.println("try with correct credentials..");
-			//throw e;
+
 		} finally {
 			session.close();
 		}
 		return null;
 
 	}
-	@Transactional
 
 	@Override
 	public User getUserById(long userId) {
@@ -87,7 +77,6 @@ public class UserDaoImpl implements IUserDao {
 		return (User) sessionFactory.getCurrentSession().get(User.class, userId);
 	}
 
-	@Transactional
 	@Override
 	public User getUserByEmail(String email) {
 		Session session = sessionFactory.getCurrentSession();
@@ -102,38 +91,34 @@ public class UserDaoImpl implements IUserDao {
 
 		return (User) sessionFactory.getCurrentSession().get(User.class, user.getEmail());
 	}
+
 	@Override
 	public User getObjByUUID(String randomUUID) {
-		
 
 		Session session = sessionFactory.getCurrentSession();
-		
+
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
-	
-	User user3 =(User) criteria.uniqueResult();
-		System.out.println("userdaoimpl..........."+user3.getRandomUUID());
+
+		User user3 = (User) criteria.uniqueResult();
+		System.out.println("userdaoimpl..........." + user3.getRandomUUID());
 		return user3;
 
-		
-
-		
 	}
-	@Transactional
 
 	@Override
 	public boolean resetPassword(String randomUUID, String password) {
 		User user = null;
-		//session.update(user);
-		session=sessionFactory.openSession();
-		Query query=session.createQuery("update User set password=:password where randomUUID=:randomUUID");
+		// session.update(user);
+		session = sessionFactory.openSession();
+		Query query = session.createQuery("update User set password=:password where randomUUID=:randomUUID");
 		query.setParameter("password", password);
-		query.setParameter("randomUUID",randomUUID);
+		query.setParameter("randomUUID", randomUUID);
 		query.executeUpdate();
 		System.out.println("Record updated...");
 		return true;
 	}
-	@Transactional
+
 	public User getUserByRandomId(String randomUUID) {
 
 		System.out.println("id " + randomUUID);
@@ -142,10 +127,10 @@ public class UserDaoImpl implements IUserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
 		User user = (User) criteria.uniqueResult();
-		System.out.println("email id "+user.getEmail());
+		System.out.println("email id " + user.getEmail());
 		return user;
 	}
-	@Transactional
+
 	@Override
 	public User updateRecord(User user) {
 
@@ -155,9 +140,10 @@ public class UserDaoImpl implements IUserDao {
 		return user;
 
 	}
+
 	@Override
 	public String getUserPassword() {
-		
+
 		return null;
 	}
 }

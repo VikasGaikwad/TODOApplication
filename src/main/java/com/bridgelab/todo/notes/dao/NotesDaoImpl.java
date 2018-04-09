@@ -10,10 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelab.todo.notes.model.Notes;
+import com.bridgelab.todo.user.model.User;
 
 /**
  * @author bridgeit
  *
+ */
+/*@Repository()-
+ * returns the component name, if any needed, Indicates that an annotated class
+ * is a "Repository"- 4 classes-
+ * 
+ * @Target({ElementType.TYPE}) - Indicates the contexts in which an annotation
+ * type is applicable.
+ * 
+ * @Retention(RetentionPolicy.RUNTIME)-Indicates how long annotations with the
+ * annotated type are to be retained.
+ * 
+ * @Documented -Indicates that annotations with a type are to be documented by
+ * javadoc and similar tools by default.
+ * 
+ * @Component-Indicates that an annotated class is a "component".
  */
 @Repository()
 public class NotesDaoImpl implements INotesDao {
@@ -43,6 +59,7 @@ public class NotesDaoImpl implements INotesDao {
 		/*
 		 * Persist the given transient instance, first assigning a generated identifier.
 		 */
+
 		long notedata = (long) session.save(notes);
 		return (int) notedata;
 
@@ -50,7 +67,8 @@ public class NotesDaoImpl implements INotesDao {
 
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
-		/* openSession() - btains the current session. */
+		/* openSession() - obtains the current session. */
+		System.out.println("note id======"+noteId);
 		sessionFactory.openSession();
 		Query query = (Query) session
 				.createQuery("update Notes  set title=:title,description=:description where noteId=:noteId");
@@ -61,7 +79,6 @@ public class NotesDaoImpl implements INotesDao {
 
 	}
 
-	
 	@Override
 	public boolean deleteNotes(long noteId) {
 		session = sessionFactory.openSession();

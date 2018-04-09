@@ -78,20 +78,23 @@ public class UserServiceImpl implements IUserService {
 		 * from=user.getEmail(); Mail.sendMail(to, from); }
 		 */
 	}
-
 	@Override
-	public String loginUser(String email, String password) {
-		User userObject=userDao.getUserByEmail(email);
-		String user2 =  userDao.loginUser(email,  password);
-		if(user2!=null && BCrypt.checkpw(password,userObject.getPassword())) {
-			int id= (int)userObject.getUserId();
-			String token=JWT_Tokens.createToken(id);
-			System.out.println("generated token---"+token);
-		}
+	public String loginUser(User user) {
+			//User user3 = null;
+		String token=null;
+			User user3=userDao.loginUser(user);
+			System.out.println("++++++++++"+user3.getUserId());
+			if(user3!=null && user3.isStatus()==true) 
+			{
+				int id=(int) user3.getUserId();
+				token=JWT_Tokens.createToken(id);
+				System.out.println("generated token : - "+token);
+			}
 		
-		return user2;
+		return token;
+	
 	}
-
+	
 	@Transactional
 	public User getUserById(long userId) {
 

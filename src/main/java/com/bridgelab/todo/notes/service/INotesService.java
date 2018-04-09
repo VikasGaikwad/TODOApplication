@@ -12,7 +12,7 @@ import com.bridgelab.todo.user.model.User;
  */
 public interface INotesService {
 
-	void createNote(Notes notes, User user);
+	void createNote(Notes notes, int id);
 
 	
 	void updateNotes(Notes notes, long noteId);

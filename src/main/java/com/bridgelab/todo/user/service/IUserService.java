@@ -13,7 +13,8 @@ import com.bridgelab.todo.user.model.User;
  */
 public interface IUserService {
 	public void registerUser(User user,String emailVerificationUrl);
-	public String loginUser(String email, String password);	
+	/*public String loginUser(String email, String password);*/	
+	public String loginUser(User user);
 	User getUserById(long userId);
 	public User sendingMail(User user);
 	public User getUserByEmail(String email);

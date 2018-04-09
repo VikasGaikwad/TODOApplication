@@ -15,7 +15,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 public class InterceptorClass extends HandlerInterceptorAdapter{
 
 public boolean preHandle(HttpServletRequest request, HttpServletResponse response) {
-	request.setAttribute("token_id", request.getHeader("id"));
+String tokenSample=(String) request.getAttribute("auth");
+JWT_Tokens.verifyToken(tokenSample);
+	
+	
 	return true;
 	
 }

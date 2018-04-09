@@ -70,7 +70,7 @@ public class UserController {
 				return new ResponseEntity<String>("registered successfully", HttpStatus.OK);
 
 			} catch (Exception e) {
-				return new ResponseEntity<String>("email,password,name--convention error", HttpStatus.CONFLICT);
+				return new ResponseEntity<String>("email/password/name--convention error", HttpStatus.CONFLICT);
 
 			}
 
@@ -83,23 +83,15 @@ public class UserController {
 	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
-			User user2 = userService.getUserByEmail(user.getEmail());
 
-			userService.loginUser(user.getEmail(), user.getPassword());
-
-			String token = userService.loginUser(user2.getEmail(), user2.getPassword());
+			String token = userService.loginUser(user);
 			if (token != null) {
-				response.setHeader("autherization", token);
+				response.setHeader("auth", token);
 				return new ResponseEntity<String>("login success", HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<String>("password not matched", HttpStatus.CONFLICT);
+				return new ResponseEntity<String>("email, password mis-matched", HttpStatus.CONFLICT);
 			}
-			// HttpSession session=request.getSession();
-			// session.setAttribute("userId", user2);
-
-			// HttpHeaders header=new HttpHeaders();
-			// header.set("header", tiken_id);
 
 		} catch (Exception e) {
 			return null;

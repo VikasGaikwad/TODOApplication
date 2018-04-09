@@ -15,7 +15,7 @@ public interface IUserDao {
 
 	int registerUser(User user);
 
-	String loginUser(String email, String password);
+	User loginUser(User user);
 
 	User getUserById(long userId);
 
@@ -32,6 +32,8 @@ public interface IUserDao {
 	User updateRecord(User user);
 
 	String getUserPassword();
+
+	
 
 
 
