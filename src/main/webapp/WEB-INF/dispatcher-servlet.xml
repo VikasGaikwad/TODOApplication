@@ -112,5 +112,8 @@
 		class="com.bridgelab.todo.notes.dao.NotesDaoImpl"></bean>
 	<bean id="notesService"
 		class="com.bridgelab.todo.notes.service.NotesServiceImpl"></bean>
+		
+		
+	
 
 </beans>

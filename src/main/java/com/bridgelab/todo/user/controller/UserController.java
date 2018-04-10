@@ -79,7 +79,7 @@ public class UserController {
 		return new ResponseEntity<String>("something went wrong", HttpStatus.BAD_REQUEST);
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "userapi/login", method = RequestMethod.POST)
 	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {

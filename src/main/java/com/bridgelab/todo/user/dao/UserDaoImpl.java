@@ -31,10 +31,11 @@ public class UserDaoImpl implements IUserDao {
 
 			return (int) id;
 		} catch (Exception e) {
-			throw e;
+			
 		} finally {
 			session.close();
 		}
+		return 0;
 
 	}
 

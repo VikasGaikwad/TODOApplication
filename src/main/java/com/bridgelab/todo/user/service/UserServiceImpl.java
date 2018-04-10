@@ -41,33 +41,22 @@ public class UserServiceImpl implements IUserService {
 	 * <b>{@link Transactional @Transactional}</b> Transactional annotation provides
 	 * the application the ability to declaratively control transaction boundaries.
 	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.bridgelab.todo.user.service.IUserService#registerUser(com.bridgelab.todo.
-	 * user.model.User, java.lang.String)
-	 */
 	@Transactional
 	public void registerUser(User user, String emailVerificationUrl) {
-		/*
-		 * java.util.UUID- A UUID class that represents an immutable universally unique
-		 * identifier (UUID). A UUID represents a 128-bit value.
-		 */
+
 		String hashCode = passwordEncoder.encode(user.getPassword());
 
 		user.setPassword(hashCode);
 		String randomUUID = UUID.randomUUID().toString();
-		System.out.println(randomUUID);
+		// System.out.println(randomUUID);
 		user.setRandomUUID(randomUUID);
 		int id = userDao.registerUser(user);
-		System.out.println("record number " + id);
+		// System.out.println("record number " + id);
 		if (id > 0) {
 			String to = user.getEmail();
 			String from = "vikas343430@gmail.com";
 			String message = emailVerificationUrl + "/activateaccount/" + randomUUID;
-			String subject = "click to activate account";
+			String subject = "succssfully reistered, click on link to activate account";
 
 			mailService.sendMail(to, from, message, subject);
 		}
@@ -78,23 +67,23 @@ public class UserServiceImpl implements IUserService {
 		 * from=user.getEmail(); Mail.sendMail(to, from); }
 		 */
 	}
+
 	@Override
 	public String loginUser(User user) {
-			//User user3 = null;
-		String token=null;
-			User user3=userDao.loginUser(user);
-			System.out.println("++++++++++"+user3.getUserId());
-			if(user3!=null && user3.isStatus()==true) 
-			{
-				int id=(int) user3.getUserId();
-				token=JWT_Tokens.createToken(id);
-				System.out.println("generated token : - "+token);
-			}
-		
+		// User user3 = null;
+		String token = null;
+		User user3 = userDao.loginUser(user);
+		System.out.println("userId :- " + user3.getUserId());
+		if (user3 != null && user3.isStatus() == true) {
+			int id = (int) user3.getUserId();
+			token = JWT_Tokens.createToken(id);
+			System.out.println("generated token : - " + token);
+		}
+
 		return token;
-	
+
 	}
-	
+
 	@Transactional
 	public User getUserById(long userId) {
 
@@ -112,12 +101,12 @@ public class UserServiceImpl implements IUserService {
 
 		return userDao.getUserByEmail(email);
 	}
-
+@Transactional
 	@Override
 	public void forgotPassword(User user, String forgotPasswordUrl) {
-		System.out.println("before of --userDao.getUserByEmail(user.getEmail())-- method");
+
 		user = userDao.getUserByEmail(user.getEmail());
-		System.out.println("UUID of user sending on mail" + user.getRandomUUID());
+
 		if (user != null) {
 
 			String randomUUID = user.getRandomUUID();
@@ -146,6 +135,12 @@ public class UserServiceImpl implements IUserService {
 		boolean status = userDao.resetPassword(userobj.getRandomUUID(), user.getPassword());
 		return status;
 	}
+	/*
+	 * Propagation- The transaction isolation level. Support a current transaction,
+	 * create a new one if none exists. REQUIRED - Support a current transaction,
+	 * execute non-transactionally if none exists. As a consequence, the same
+	 * resources (Hibernate Session) will be shared for the entire specified scope.
+	 */
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
