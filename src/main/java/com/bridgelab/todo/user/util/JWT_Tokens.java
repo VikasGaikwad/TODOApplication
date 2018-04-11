@@ -66,7 +66,7 @@ public class JWT_Tokens {
 	 * @return id : returns verified generated token.
 	 */
 	public static int verifyToken(String token) {
-		System.out.println("*********************");
+		System.out.println("***********inside verify token**********");
 		int id = 0;
 		/*
 		 * Claim interface provides the getId() method which returns the JWTs jti (JWT
@@ -75,6 +75,7 @@ public class JWT_Tokens {
 		Claims claims = Jwts.parser().setSigningKey(SIGNIN_KEY).parseClaimsJws(token).getBody();
 		//System.out.println(" claim id - " + claims.getId());
 		id = Integer.parseInt(claims.getId());
+		System.out.println("***********outside verify token**********");
 		return id;
 
 	}

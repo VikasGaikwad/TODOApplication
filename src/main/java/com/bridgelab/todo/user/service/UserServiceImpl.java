@@ -45,32 +45,25 @@ public class UserServiceImpl implements IUserService {
 	public void registerUser(User user, String emailVerificationUrl) {
 
 		String hashCode = passwordEncoder.encode(user.getPassword());
-
 		user.setPassword(hashCode);
 		String randomUUID = UUID.randomUUID().toString();
-		// System.out.println(randomUUID);
 		user.setRandomUUID(randomUUID);
 		int id = userDao.registerUser(user);
-		// System.out.println("record number " + id);
-		if (id > 0) {
+		int token_id=(int) user.getUserId();
+		System.out.println("registered user id----"+user.getUserId());
+		String token=JWT_Tokens.createToken(token_id);
+		System.out.println("registration token : "+token);
+		if (id > 0) {			
 			String to = user.getEmail();
-			String from = "vikas343430@gmail.com";
-			String message = emailVerificationUrl + "/activateaccount/" + randomUUID;
-			String subject = "succssfully reistered, click on link to activate account";
-
-			mailService.sendMail(to, from, message, subject);
+			String message = emailVerificationUrl + "/activateaccount/" + token;
+			mailService.sendMail(to,message);
 		}
 
-		/*
-		 * if(count>0) { String to=user.getEmail();
-		 * System.out.println(" mail id in UserServiceImpl----------"+to); String
-		 * from=user.getEmail(); Mail.sendMail(to, from); }
-		 */
+
 	}
 
 	@Override
 	public String loginUser(User user) {
-		// User user3 = null;
 		String token = null;
 		User user3 = userDao.loginUser(user);
 		System.out.println("userId :- " + user3.getUserId());
@@ -79,9 +72,7 @@ public class UserServiceImpl implements IUserService {
 			token = JWT_Tokens.createToken(id);
 			System.out.println("generated token : - " + token);
 		}
-
 		return token;
-
 	}
 
 	@Transactional
@@ -101,7 +92,7 @@ public class UserServiceImpl implements IUserService {
 
 		return userDao.getUserByEmail(email);
 	}
-@Transactional
+	@Transactional
 	@Override
 	public void forgotPassword(User user, String forgotPasswordUrl) {
 
@@ -110,11 +101,12 @@ public class UserServiceImpl implements IUserService {
 		if (user != null) {
 
 			String randomUUID = user.getRandomUUID();
+			int id = (int) user.getUserId();
+			String token = JWT_Tokens.createToken(id);
+			System.out.println("generated token for forgot password : - " + token);
 			String to = user.getEmail();
-			String from = "vikas343430@gmail.com";
-			String subject = "Link to reset password";
-			String message = forgotPasswordUrl + "/resetPassword/" + randomUUID;
-			mailService.sendMail(to, from, message, subject);
+			String message = forgotPasswordUrl + "/userapi/resetPassword/" + token;
+			mailService.sendMail(to,message);
 		}
 	}
 
@@ -124,17 +116,21 @@ public class UserServiceImpl implements IUserService {
 		return userDao.getObjByUUID(randomUUID);
 
 	}
-
+@Transactional
 	@Override
-	public boolean resetPassword(User userobj, User user) {
-
-		System.out.println(userobj.getEmail());
-		System.out.println(userobj.getPassword());
-		System.out.println(userobj.getRandomUUID());
-
-		boolean status = userDao.resetPassword(userobj.getRandomUUID(), user.getPassword());
-		return status;
+	public String resetPassword(String token, HttpServletRequest request,String newPassword) {
+		System.out.println("inside activate account token"+token);
+		int id=JWT_Tokens.verifyToken(token);
+		System.out.println("id+++++++++++"+id);
+		User user = userDao.getUserById(id);
+		user.setPassword(newPassword);
+		System.out.println("inside activateAccount====\n"+user.getEmail()+"\npassword===="+user.getPassword());
+		User user2 = userDao.updateRecord(user);
+		return null;
+				
+		
 	}
+	
 	/*
 	 * Propagation- The transaction isolation level. Support a current transaction,
 	 * create a new one if none exists. REQUIRED - Support a current transaction,
@@ -144,10 +140,16 @@ public class UserServiceImpl implements IUserService {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public void activateAccount(String randomUUID, HttpServletRequest request) {
-		User user = userDao.getUserByRandomId(randomUUID);
+	public String activateAccount(String token, HttpServletRequest request) {
+		System.out.println("inside activate account token"+token);
+		int id=JWT_Tokens.verifyToken(token);
+		System.out.println("id+++++++++++"+id);
+		User user = userDao.getUserById(id);
+		System.out.println("inside activateAccount====\n"+user.getEmail()+"\npassword===="+user.getPassword());
 		user.setStatus(true);
+		@SuppressWarnings("unused")
 		User user2 = userDao.updateRecord(user);
+		return null;
 
 	}
 

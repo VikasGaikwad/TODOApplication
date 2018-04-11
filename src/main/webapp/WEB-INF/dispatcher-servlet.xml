@@ -15,26 +15,18 @@
    http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- bean definitions here -->
-	<context:component-scan
-		base-package="com.bridgeit" />
+	<context:component-scan base-package="com.bridgeit" />
 	<mvc:annotation-driven />
-	<tx:annotation-driven
-		transaction-manager="transactionManager" />
-
-
-	<context:component-scan
-		base-package="com.bridgelab"></context:component-scan>
-	<mvc:annotation-driven />
-
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<context:property-placeholder location="classpath:dev.properties" />
+	<context:component-scan base-package="com.bridgelab"></context:component-scan>
 
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver"></property>
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/tododatabase"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="root"></property>
+		<property name="driverClassName" value="${db.driver}"></property>
+		<property name="url" value="${db.url}"></property>
+		<property name="username" value="${db.user}"></property>
+		<property name="password" value="${db.password}"></property>
 	</bean>
 
 
@@ -67,10 +59,10 @@
 
 	<bean id="mailSending"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com"></property>
-		<property name="port" value="25"></property>
-		<property name="username" value="vikas343430@gmail.com"></property>
-		<property name="password" value="vikas@123456"></property>
+		<property name="host" value="${smtp.host}"></property>
+		<property name="port" value="${smtp.port}"></property>
+		<property name="username" value="${smtp.username}"></property>
+		<property name="password" value="${smtp.password}"></property>
 
 		<property name="javaMailProperties">
 			<props>
@@ -94,7 +86,7 @@
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/userapi/**"/>
+			<mvc:mapping path="/userapi/**" />
 			<bean class="com.bridgelab.todo.user.util.InterceptorClass"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
@@ -102,18 +94,12 @@
 
 
 	<bean id="userDao" class="com.bridgelab.todo.user.dao.UserDaoImpl"></bean>
-	<bean id="userService"
-		class="com.bridgelab.todo.user.service.UserServiceImpl"></bean>
-	<bean id="validateBean"
-		class="com.bridgelab.todo.user.util.Validator"></bean>
+	<bean id="userService" class="com.bridgelab.todo.user.service.UserServiceImpl"></bean>
+	<bean id="validateBean" class="com.bridgelab.todo.user.util.Validator"></bean>
+	<bean id="notesDao" class="com.bridgelab.todo.notes.dao.NotesDaoImpl"></bean>
+	<bean id="notesService" class="com.bridgelab.todo.notes.service.NotesServiceImpl"></bean>
 
 
-	<bean id="notesDao"
-		class="com.bridgelab.todo.notes.dao.NotesDaoImpl"></bean>
-	<bean id="notesService"
-		class="com.bridgelab.todo.notes.service.NotesServiceImpl"></bean>
-		
-		
-	
+
 
 </beans>

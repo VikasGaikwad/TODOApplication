@@ -55,7 +55,8 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "userapi/register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
 
 		if (Validator.validate(user.getUsername()) == true && Validator.validateEmail(user.getEmail()) == true
@@ -100,10 +101,12 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/activateaccount/{randomUUID}", method = RequestMethod.GET)
-	public ResponseEntity<Void> activateAccount(@PathVariable("randomUUID") String randomUUID,
+	@RequestMapping(value = "userapi/activateaccount/{token:.+}", method = RequestMethod.GET)
+	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
 			HttpServletRequest request, HttpServletResponse response) {
-		userService.activateAccount(randomUUID, request);
+		
+		System.out.println("inside controller of activate------"+token);
+		userService.activateAccount(token, request);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
@@ -128,13 +131,13 @@ public class UserController {
 		return new ResponseEntity<String>("link sent successfully", HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/resetPassword/{randomUUID}", method = RequestMethod.POST)
-	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("randomUUID") String randomUUID) {
+	@RequestMapping(value = "userapi/resetPassword/{token:.+}", method = RequestMethod.POST)
+	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
 
-		User userobj = userService.getObjByUUID(randomUUID);
+		//User userobj = userService.getObjByUUID(token);
 		// userobj.setEmail(userobj.getEmail());
-
-		userService.resetPassword(userobj, user);
+String newPassword=user.getPassword();
+		userService.resetPassword(token, request,newPassword);
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 
 	}

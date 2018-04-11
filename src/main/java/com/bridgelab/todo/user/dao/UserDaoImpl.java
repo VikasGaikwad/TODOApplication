@@ -128,7 +128,7 @@ public class UserDaoImpl implements IUserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
 		User user = (User) criteria.uniqueResult();
-		System.out.println("email id " + user.getEmail());
+		//System.out.println("email id " + user.getEmail());
 		return user;
 	}
 
