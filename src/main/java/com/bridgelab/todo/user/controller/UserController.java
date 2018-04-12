@@ -86,6 +86,7 @@ public class UserController {
 		try {
 
 			String token = userService.loginUser(user);
+			
 			if (token != null) {
 				response.setHeader("auth", token);
 				return new ResponseEntity<String>("login success", HttpStatus.OK);
