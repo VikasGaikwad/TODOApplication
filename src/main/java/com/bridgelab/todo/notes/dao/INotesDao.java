@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.notes.dao;
 
+import java.util.List;
+
 import com.bridgelab.todo.notes.model.Notes;
 
 /**
@@ -23,6 +25,7 @@ public interface INotesDao {
 
 
 	Notes getNoteById(long noteId);
+	 List<Notes> getAllNotesByUserId(int userId);
 
 	
 

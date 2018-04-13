@@ -3,9 +3,12 @@
  */
 package com.bridgelab.todo.notes.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -100,6 +103,16 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public Notes getNoteById(long noteId) {
 		return (Notes) sessionFactory.openSession().get(Notes.class, noteId);
+	}
+
+	@Override
+	public List<Notes> getAllNotesByUserId(int userId) {
+		String sqlQuery="From Notes where userId=:userId";
+		Query query=(Query)session.createQuery(sqlQuery);
+		List<Notes> list = session.createCriteria(User.class).add(Restrictions.eq("userId", userId)).list();
+
+		
+		return list;
 	}
 
 }

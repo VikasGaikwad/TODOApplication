@@ -4,6 +4,7 @@
 package com.bridgelab.todo.notes.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +80,12 @@ public class NotesServiceImpl implements INotesService {
 		Notes notes=notesDao.getNoteById(id);
 		
 		
+	}
+
+	@Override
+	public List<Notes> getAllNotesByUserId(int userId) {
+		List<Notes> notes=notesDao.getAllNotesByUserId(userId);
+		return notes;
 	}
 
 }

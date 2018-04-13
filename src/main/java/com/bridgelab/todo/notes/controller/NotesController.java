@@ -3,6 +3,9 @@
 */
 package com.bridgelab.todo.notes.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,19 +48,19 @@ public class NotesController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{noteId}/updatenote", method = RequestMethod.PUT)
+	@RequestMapping(value = "userapi/{noteId}/updatenote", method = RequestMethod.PUT)
 	public ResponseEntity<String> updateNotes(@PathVariable("noteId") long noteId, @RequestBody Notes notes) {
 		notesService.updateNotes(notes, noteId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{noteId}/deletenote", method = RequestMethod.DELETE)
+	@RequestMapping(value = "userapi/{noteId}/deletenote", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteNotes(@PathVariable("noteId") long noteId) {
 		notesService.deleteNotes(noteId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{noteId}/readonenote", method = RequestMethod.GET)
+	@RequestMapping(value = "userapi/{noteId}/readonenote", method = RequestMethod.GET)
 	public ResponseEntity<Notes> getnote(@PathVariable("noteId") long noteId) {
 
 		
@@ -65,9 +68,13 @@ public class NotesController {
 		return new ResponseEntity<Notes>(notes, HttpStatus.OK);
 
 	}
-	@RequestMapping(value="readallnotes", method=RequestMethod.GET)
-	public ResponseEntity<?> readNotes(@PathVariable("token") String token){
-		notesService.readNotes(token);
+	@RequestMapping(value="userapi/readallnotes", method=RequestMethod.GET)
+	public ResponseEntity<?> readNotes(HttpServletRequest request,HttpServlet response){
+
+		String token=request.getHeader("auth");
+		System.out.println("token------"+token);
+	     int userId=JWT_Tokens.verifyToken(token);
+	     List<Notes> notes=notesService.getAllNotesByUserId(userId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 

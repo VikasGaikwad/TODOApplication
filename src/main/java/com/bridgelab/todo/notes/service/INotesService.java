@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.notes.service;
 
+import java.util.List;
+
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
 
@@ -22,6 +24,7 @@ public interface INotesService {
 
 
 	void readNotes(String token);
+	List<Notes> getAllNotesByUserId(int userId);
 
 	
 	

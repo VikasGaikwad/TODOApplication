@@ -30,8 +30,9 @@ public class CORSFilter extends OncePerRequestFilter{
 		   response.addHeader("Access-Control-Expose-Headers", "auth, Content-Type");
 		   response.addHeader("Access-Control-Max-Age", "480000");
 		   response.setStatus(HttpServletResponse.SC_OK);
-		   System.out.println("CORS filter sending resuest and response");
+		   
 		   chain.doFilter(request, response);
+		   System.out.println("CORS filter sending resuest and response");
 		
 	}
 }
