@@ -20,6 +20,9 @@ public interface INotesService {
 
 	Notes getNoteById(long noteId);
 
+
+	void readNotes(String token);
+
 	
 	
 	

@@ -3,11 +3,16 @@
  */
 package com.bridgelab.todo.user.controller;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,7 +60,9 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 
-	
+	UserService userResponse=new UserService();
+
+
 	@RequestMapping(value = "userapi/register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
 
@@ -79,20 +86,24 @@ public class UserController {
 
 		return new ResponseEntity<String>("something went wrong", HttpStatus.BAD_REQUEST);
 	}
-
-	@RequestMapping(value = "userapi/login", method = RequestMethod.POST)
-	public ResponseEntity<String> userLog(@RequestBody User user, HttpServletRequest request,
+	@RequestMapping(value = "userapi/login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> userLog(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 
 			String token = userService.loginUser(user);
-			
+
 			if (token != null) {
-				response.setHeader("auth", token);
-				return new ResponseEntity<String>("login success", HttpStatus.OK);
+
+				userResponse.setStatusCode(200);
+				userResponse.setMessage("Login successfull");
+				response.setHeader("Autherization", token);
+				return new ResponseEntity<UserService>(userResponse , HttpStatus.OK);
 
 			} else {
-				return new ResponseEntity<String>("email, password mis-matched", HttpStatus.CONFLICT);
+
+
+				return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
 			}
 
 		} catch (Exception e) {
@@ -101,11 +112,39 @@ public class UserController {
 		}
 
 	}
+	// below code is used without of UserService.java , it uses hashmap
+	/*	@RequestMapping(value = "userapi/login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, String>> userLog(@RequestBody User user, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+
+			String token = userService.loginUser(user);
+
+			Map mapObj = new HashMap<String,String>();
+			if (token != null) {
+				mapObj.put("message", "Login Success");
+				response.setHeader("auth", token);
+				return new ResponseEntity<Map<String,String>>(mapObj , HttpStatus.OK);
+
+			} else {
+
+				mapObj.put("message", "wrong credential");
+				return new ResponseEntity<Map<String,String>>(mapObj , HttpStatus.CONFLICT);
+			}
+
+		} catch (Exception e) {
+			return null;
+
+		}
+
+	}*/
+
+
 
 	@RequestMapping(value = "userapi/activateaccount/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
 			HttpServletRequest request, HttpServletResponse response) {
-		
+
 		System.out.println("inside controller of activate------"+token);
 		userService.activateAccount(token, request);
 		return new ResponseEntity<Void>(HttpStatus.OK);
@@ -137,7 +176,7 @@ public class UserController {
 
 		//User userobj = userService.getObjByUUID(token);
 		// userobj.setEmail(userobj.getEmail());
-String newPassword=user.getPassword();
+		String newPassword=user.getPassword();
 		userService.resetPassword(token, request,newPassword);
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 

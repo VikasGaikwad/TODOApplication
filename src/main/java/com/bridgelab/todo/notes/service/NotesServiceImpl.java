@@ -13,6 +13,7 @@ import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.dao.IUserDao;
 import com.bridgelab.todo.user.model.User;
 import com.bridgelab.todo.user.service.IUserService;
+import com.bridgelab.todo.user.util.JWT_Tokens;
 
 /**
  * @author bridgeit
@@ -67,6 +68,17 @@ public class NotesServiceImpl implements INotesService {
 	public Notes getNoteById(long noteId) {
 
 		return notesDao.getNoteById(noteId);
+	}
+
+	@Override
+	public void readNotes(String token) {
+		int id=JWT_Tokens.verifyToken(token);
+		System.out.println("notes id : "+id);
+		
+		@SuppressWarnings("unused")
+		Notes notes=notesDao.getNoteById(id);
+		
+		
 	}
 
 }

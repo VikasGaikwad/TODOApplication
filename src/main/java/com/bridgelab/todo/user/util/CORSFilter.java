@@ -23,14 +23,14 @@ public class CORSFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-		System.out.println("inside cors filter");
+		
 		 response.addHeader("Access-Control-Allow-Origin", "*");
 		   response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-		   response.addHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept, X-Requested-With");
-		   response.addHeader("Access-Control-Expose-Headers", "Authorization, Content-Type");
+		   response.addHeader("Access-Control-Allow-Headers", "auth,Content-Type,Accept, X-Requested-With");
+		   response.addHeader("Access-Control-Expose-Headers", "auth, Content-Type");
 		   response.addHeader("Access-Control-Max-Age", "480000");
 		   response.setStatus(HttpServletResponse.SC_OK);
-		   System.out.println("**********inside the CORSFilter classs************");
+		   System.out.println("CORS filter sending resuest and response");
 		   chain.doFilter(request, response);
 		
 	}

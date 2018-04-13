@@ -58,7 +58,7 @@ public class UserDaoImpl implements IUserDao {
 			 * null if the query returns no results.
 			 */
 			User userObj = (User) criteria.uniqueResult();
-			System.out.println("login successfull");
+		//	System.out.println("login successfull");
 
 			return userObj;
 

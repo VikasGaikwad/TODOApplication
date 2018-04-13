@@ -24,8 +24,7 @@ import com.bridgelab.todo.user.util.JWT_Tokens;
  *
  */
 @RestController
-/*@RequestMapping(value = "//")*/
-
+//@RequestMapping(value="/notes")
 public class NotesController {
 	@Autowired
 	INotesService notesService;
@@ -53,18 +52,23 @@ public class NotesController {
 	}
 
 	@RequestMapping(value = "{noteId}/deletenote", method = RequestMethod.DELETE)
-	public ResponseEntity<String> newDeleteNotes(@PathVariable("noteId") long noteId) {
+	public ResponseEntity<String> deleteNotes(@PathVariable("noteId") long noteId) {
 		notesService.deleteNotes(noteId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{noteId}/readnote", method = RequestMethod.GET)
+	@RequestMapping(value = "{noteId}/readonenote", method = RequestMethod.GET)
 	public ResponseEntity<Notes> getnote(@PathVariable("noteId") long noteId) {
 
 		
 		Notes notes = notesService.getNoteById(noteId);
 		return new ResponseEntity<Notes>(notes, HttpStatus.OK);
 
+	}
+	@RequestMapping(value="readallnotes", method=RequestMethod.GET)
+	public ResponseEntity<?> readNotes(@PathVariable("token") String token){
+		notesService.readNotes(token);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 
