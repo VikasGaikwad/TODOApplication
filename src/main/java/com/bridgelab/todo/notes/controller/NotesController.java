@@ -5,12 +5,12 @@ package com.bridgelab.todo.notes.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.notes.service.INotesService;
 import com.bridgelab.todo.user.util.JWT_Tokens;
+import com.bridgelab.todo.user.util.NotesDTO;
 
 /**
  * @author bridgeit
@@ -33,34 +34,35 @@ public class NotesController {
 	INotesService notesService;
 	
 
-	@RequestMapping(value = "userapi/createnote", method = RequestMethod.POST)
-	public ResponseEntity<?> newNote(@RequestBody Notes notes, HttpServletRequest request,HttpServletResponse response) {
-		/*User user = (User) request.getSession().getAttribute("userId");
-		System.out.println("----------"+user.getUserId());*/
-		
-		String token=request.getHeader("auth");
-		System.out.println("token------"+token);
-	int id=	JWT_Tokens.verifyToken(token);
-	System.out.println("verified token---"+id);
+	@RequestMapping(value = "/createnote", method = RequestMethod.POST)
+	public ResponseEntity<?> createNote(@RequestBody Notes notes, HttpServletRequest request,HttpServletResponse response) {
 	
-		notesService.createNote(notes,id);
+		//int userId=(int) request.getAttribute("userId");
+		
+		int userId = JWT_Tokens.verifyToken(request.getHeader("Authorization"));
+
+		
+		notesService.createNote(notes,userId);
 		
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "userapi/{noteId}/updatenote", method = RequestMethod.PUT)
-	public ResponseEntity<String> updateNotes(@PathVariable("noteId") long noteId, @RequestBody Notes notes) {
-		notesService.updateNotes(notes, noteId);
+	@RequestMapping(value = "user/updatenote", method = RequestMethod.PUT)
+	public ResponseEntity<String> updateNotes(@RequestBody Notes notes, HttpServletRequest request) {
+		
+		int userId = (int) request.getAttribute("userId");
+		System.out.println("id =>" +userId);
+		notesService.updateNotes(notes, userId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "userapi/{noteId}/deletenote", method = RequestMethod.DELETE)
+	@RequestMapping(value = "{noteId}/deletenote", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteNotes(@PathVariable("noteId") long noteId) {
 		notesService.deleteNotes(noteId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "userapi/{noteId}/readonenote", method = RequestMethod.GET)
+	@RequestMapping(value = "user/{noteId}/readonenote", method = RequestMethod.GET)
 	public ResponseEntity<Notes> getnote(@PathVariable("noteId") long noteId) {
 
 		
@@ -68,14 +70,13 @@ public class NotesController {
 		return new ResponseEntity<Notes>(notes, HttpStatus.OK);
 
 	}
-	@RequestMapping(value="userapi/readallnotes", method=RequestMethod.GET)
-	public ResponseEntity<?> readNotes(HttpServletRequest request,HttpServlet response){
-
-		String token=request.getHeader("auth");
-		System.out.println("token------"+token);
-	     int userId=JWT_Tokens.verifyToken(token);
-	     List<Notes> notes=notesService.getAllNotesByUserId(userId);
-		return new ResponseEntity<String>(HttpStatus.OK);
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="user/readallnotes", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> readNotes(HttpServletRequest request,HttpServletResponse response){
+		int userId=(int) request.getAttribute("userId");	 
+		List<NotesDTO> notes = notesService.getAllNotesByUserId(userId);			
+		return new ResponseEntity<List>(notes,HttpStatus.OK);
+		/*return new ResponseEntity<List<NotesDTO>>(notes,HttpStatus.OK);*/
 	}
 
 

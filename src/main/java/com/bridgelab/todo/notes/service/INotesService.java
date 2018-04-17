@@ -3,10 +3,12 @@
  */
 package com.bridgelab.todo.notes.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
+import com.bridgelab.todo.user.util.NotesDTO;
 
 /**
  * @author bridgeit
@@ -24,7 +26,8 @@ public interface INotesService {
 
 
 	void readNotes(String token);
-	List<Notes> getAllNotesByUserId(int userId);
+	List<NotesDTO> getAllNotesByUserId(long userId);
+	
 
 	
 	

@@ -3,6 +3,7 @@
  */
 package com.bridgelab.todo.notes.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.bridgelab.todo.user.dao.IUserDao;
 import com.bridgelab.todo.user.model.User;
 import com.bridgelab.todo.user.service.IUserService;
 import com.bridgelab.todo.user.util.JWT_Tokens;
+import com.bridgelab.todo.user.util.NotesDTO;
 
 /**
  * @author bridgeit
@@ -55,6 +57,8 @@ public class NotesServiceImpl implements INotesService {
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
 
+		User user = userService.getUserById(noteId);
+		notes.setUser(user);
 		notesDao.updateNotes(notes, noteId);
 	}
 
@@ -81,11 +85,18 @@ public class NotesServiceImpl implements INotesService {
 		
 		
 	}
-
+@Transactional
 	@Override
-	public List<Notes> getAllNotesByUserId(int userId) {
+	public List<NotesDTO> getAllNotesByUserId(long userId) {
+
 		List<Notes> notes=notesDao.getAllNotesByUserId(userId);
-		return notes;
+		
+		List<NotesDTO> responseDTO=new ArrayList<>();
+		for (Notes object : notes) {
+			NotesDTO obj=	new NotesDTO(object);
+			responseDTO.add(obj);
+		}
+		return responseDTO;
 	}
 
 }

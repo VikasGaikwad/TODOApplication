@@ -72,6 +72,7 @@ public class JWT_Tokens {
 		 * Claim interface provides the getId() method which returns the JWTs jti (JWT
 		 * ID) value or null if not present.
 		 */
+		System.out.println("token isss.."+token);
 		Claims claims = Jwts.parser().setSigningKey(SIGNIN_KEY).parseClaimsJws(token).getBody();
 		//System.out.println(" claim id - " + claims.getId());
 		id = Integer.parseInt(claims.getId());

@@ -25,7 +25,7 @@ public interface INotesDao {
 
 
 	Notes getNoteById(long noteId);
-	 List<Notes> getAllNotesByUserId(int userId);
+	 List<Notes> getAllNotesByUserId(long userId);
 
 	
 

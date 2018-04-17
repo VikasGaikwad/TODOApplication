@@ -4,9 +4,6 @@
 package com.bridgelab.todo.user.controller;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -86,18 +83,19 @@ public class UserController {
 
 		return new ResponseEntity<String>("something went wrong", HttpStatus.BAD_REQUEST);
 	}
-	@RequestMapping(value = "userapi/login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> userLog(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 
 			String token = userService.loginUser(user);
+			System.out.println("token in user controller..."+token);
 
 			if (token != null) {
 
 				userResponse.setStatusCode(200);
 				userResponse.setMessage("Login successfull");
-				response.setHeader("Autherization", token);
+				response.setHeader("Authorization", token);
 				return new ResponseEntity<UserService>(userResponse , HttpStatus.OK);
 
 			} else {
@@ -112,35 +110,6 @@ public class UserController {
 		}
 
 	}
-	// below code is used without of UserService.java , it uses hashmap
-	/*	@RequestMapping(value = "userapi/login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, String>> userLog(@RequestBody User user, HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-
-			String token = userService.loginUser(user);
-
-			Map mapObj = new HashMap<String,String>();
-			if (token != null) {
-				mapObj.put("message", "Login Success");
-				response.setHeader("auth", token);
-				return new ResponseEntity<Map<String,String>>(mapObj , HttpStatus.OK);
-
-			} else {
-
-				mapObj.put("message", "wrong credential");
-				return new ResponseEntity<Map<String,String>>(mapObj , HttpStatus.CONFLICT);
-			}
-
-		} catch (Exception e) {
-			return null;
-
-		}
-
-	}*/
-
-
-
 	@RequestMapping(value = "userapi/activateaccount/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
 			HttpServletRequest request, HttpServletResponse response) {

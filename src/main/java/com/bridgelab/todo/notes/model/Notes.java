@@ -46,7 +46,8 @@ public class Notes implements Serializable {
 	@Column
 	private Date createdDate;
 	
-	
+	@Column
+	private Boolean trash = false;
 	
 	@ManyToOne/*(fetch=FetchType.LAZY)*/
 	@JoinColumn(name="userId")
@@ -56,12 +57,13 @@ public class Notes implements Serializable {
 
 	}
 
-	public Notes(long noteId, String title, String description) {
+	public Notes(long noteId, String title, String description,boolean trash) {
 
 		this.noteId = noteId;
 		this.title = title;
 		this.description = description;
 		this.createdDate = createdDate;
+		this.trash=trash;
 		
 	}
 
@@ -104,6 +106,16 @@ public class Notes implements Serializable {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+	public Boolean getTrash() {
+		return trash;
+	}
+
+	public void setTrash(Boolean trash) {
+		this.trash = trash;
+	}
+
+	
 
 	
 

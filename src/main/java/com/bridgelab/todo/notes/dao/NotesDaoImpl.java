@@ -5,23 +5,25 @@ package com.bridgelab.todo.notes.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelab.todo.notes.model.Notes;
-import com.bridgelab.todo.user.model.User;
 
 /**
  * @author bridgeit
  *
  */
-/*@Repository()-
- * returns the component name, if any needed, Indicates that an annotated class
- * is a "Repository"- 4 classes-
+/*
+ * @Repository()- returns the component name, if any needed, Indicates that an
+ * annotated class is a "Repository"- 4 classes-
  * 
  * @Target({ElementType.TYPE}) - Indicates the contexts in which an annotation
  * type is applicable.
@@ -70,15 +72,20 @@ public class NotesDaoImpl implements INotesDao {
 
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
+		
+		session=sessionFactory.getCurrentSession();
+		System.out.println(notes.getDescription()+"..."+notes.getTitle()+"...."+notes.getTrash());
+		session.update(notes);
+		System.out.println("Record updated...");
 		/* openSession() - obtains the current session. */
-		System.out.println("note id======"+noteId);
-		sessionFactory.openSession();
+		/*System.out.println("note id======" + noteId);
+		session=sessionFactory.openSession();
 		Query query = (Query) session
 				.createQuery("update Notes  set title=:title,description=:description where noteId=:noteId");
 		query.setParameter("title", notes.getTitle());
 		query.setParameter("description", notes.getDescription());
 		query.setParameter("noteId", noteId);
-		query.executeUpdate();
+		query.executeUpdate();*/
 
 	}
 
@@ -106,12 +113,31 @@ public class NotesDaoImpl implements INotesDao {
 	}
 
 	@Override
-	public List<Notes> getAllNotesByUserId(int userId) {
-		String sqlQuery="From Notes where userId=:userId";
-		Query query=(Query)session.createQuery(sqlQuery);
-		List<Notes> list = session.createCriteria(User.class).add(Restrictions.eq("userId", userId)).list();
-
+	public List<Notes> getAllNotesByUserId(long userId) {
+		System.out.println("user id in notes dao impl----" + userId);
+	
+		session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Notes.class);
 		
+		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
+				.add(Projections.property("title"), "title").add(Projections.property("description"), "description"))
+				.setResultTransformer(Transformers.aliasToBean(Notes.class));
+		criteria.add(Restrictions.eq("user.userId", userId));
+
+		@SuppressWarnings("unchecked")
+		List<Notes> list = criteria.list();
+		if (!list.isEmpty()) {
+			System.out.println("following notes found..");
+			/*
+			 * list.get(0); list.get(1); list.get(2);
+			 */
+			for (Notes notes : list) {
+				System.out.println(notes.getNoteId());
+				System.out.println(notes.getTitle());
+				System.out.println(notes.getDescription());
+				System.out.println("====================");
+			}
+		}
 		return list;
 	}
 

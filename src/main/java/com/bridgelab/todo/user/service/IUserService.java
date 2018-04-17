@@ -17,7 +17,7 @@ public interface IUserService {
 	/* public String loginUser(String email, String password); */
 	public String loginUser(User user);
 
-	User getUserById(long userId);
+	public User getUserById(long userId);
 
 	public User sendingMail(User user);
 

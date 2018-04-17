@@ -86,8 +86,8 @@
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/userapi/**" />
-			<bean class="com.bridgelab.todo.user.util.InterceptorClass"></bean>
+			<mvc:mapping path="/user/**" />
+			<bean id="user" class="com.bridgelab.todo.user.util.InterceptorClass"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 

@@ -4,6 +4,9 @@
 	version="3.0">
 	<display-name>To Do Application</display-name>
 
+
+	
+
 	<!-- Alternatively we can enable CORS by simply using a servlet filter by 
 		adding the CORS header to the response in the doFilter() method. we Created 
 		a Java class CORSFilter for implementing the Filter interface. -->
@@ -17,8 +20,8 @@
 		<filter-name>CORSFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	
+
+
 
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
