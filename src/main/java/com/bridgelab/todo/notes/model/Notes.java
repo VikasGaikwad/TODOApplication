@@ -46,7 +46,7 @@ public class Notes implements Serializable {
 	@Column
 	private Date createdDate;
 	
-	@Column
+	@Column/*(name = "trash", columnDefinition = "boolean default true", nullable = false)*/
 	private Boolean trash = false;
 	
 	@ManyToOne/*(fetch=FetchType.LAZY)*/

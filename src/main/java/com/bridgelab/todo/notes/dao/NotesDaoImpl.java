@@ -59,6 +59,7 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public int createNote(Notes notes) {
 
+		System.out.println(notes.getTitle()+"......"+notes.getTrash());
 		/* getCurrentSession()-Obtains the current session. */
 		session = sessionFactory.getCurrentSession();
 		/*
@@ -135,6 +136,7 @@ public class NotesDaoImpl implements INotesDao {
 				System.out.println(notes.getNoteId());
 				System.out.println(notes.getTitle());
 				System.out.println(notes.getDescription());
+				System.out.println(notes.getTrash());
 				System.out.println("====================");
 			}
 		}

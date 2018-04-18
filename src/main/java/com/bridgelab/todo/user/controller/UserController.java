@@ -100,8 +100,9 @@ public class UserController {
 
 			} else {
 
-
-				return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
+				userResponse.setStatusCode(400);
+				userResponse.setMessage("Login fail");
+				return new ResponseEntity<UserService>(userResponse, HttpStatus.OK);
 			}
 
 		} catch (Exception e) {

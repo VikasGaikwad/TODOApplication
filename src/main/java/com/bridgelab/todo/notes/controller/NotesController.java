@@ -76,7 +76,6 @@ public class NotesController {
 		int userId=(int) request.getAttribute("userId");	 
 		List<NotesDTO> notes = notesService.getAllNotesByUserId(userId);			
 		return new ResponseEntity<List>(notes,HttpStatus.OK);
-		/*return new ResponseEntity<List<NotesDTO>>(notes,HttpStatus.OK);*/
 	}
 
 

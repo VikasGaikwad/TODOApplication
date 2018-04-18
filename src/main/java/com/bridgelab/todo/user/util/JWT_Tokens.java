@@ -50,7 +50,7 @@ public class JWT_Tokens {
 		JwtBuilder builder = Jwts.builder().setId(Integer.toString(id)).setIssuedAt(currentDate)
 				.signWith(SignatureAlgorithm.HS256, SIGNIN_KEY).setExpiration(expireDate);
 		/*
-		 * compact() - When you are ready to give the token to your end user, you need
+		 * compact() - WheAuthorizationn you are ready to give the token to your end user, you need
 		 * to compact it. This will turn it into a Base64 URL encoded string, making it
 		 * safe to pass around in browsers without any unexpected formatting applied to
 		 * it.
