@@ -56,16 +56,18 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
-
+//System.out.println("##########"+noteId);
 		User user = userService.getUserById(noteId);
+		
+		/*notes.setCreatedDate(notes.getCreatedDate());*/
 		notes.setUser(user);
 		notesDao.updateNotes(notes, noteId);
 	}
 
 	@Transactional
 	@Override
-	public void deleteNotes(long noteId) {
-		notesDao.deleteNotes(noteId);
+	public void deleteNotes(long noteId,int note_id) {
+		notesDao.deleteNotes(noteId,note_id);
 
 	}
 

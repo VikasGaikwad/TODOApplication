@@ -20,7 +20,7 @@ public interface INotesService {
 
 	
 	void updateNotes(Notes notes, long noteId);
-	void deleteNotes(long noteId);
+	void deleteNotes(long noteId,int note_id);
 
 	Notes getNoteById(long noteId);
 

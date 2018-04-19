@@ -14,12 +14,14 @@ public class NotesDTO {
 	private String title;
 	private String description;
 	private Boolean trash;
+	private Boolean archive;
 	
 	public NotesDTO(Notes object) {
 		this.noteId=object.getNoteId();
 		this.title=object.getTitle();
 		this.description=object.getDescription();
 		this.trash=object.getTrash();
+		this.archive=object.getArchive();
 	
 	}
 	
@@ -55,6 +57,16 @@ public class NotesDTO {
 
 	public void setTrash(Boolean trash) {
 		this.trash = trash;
+	}
+
+
+	public Boolean getArchive() {
+		return archive;
+	}
+
+
+	public void setArchive(Boolean archive) {
+		this.archive = archive;
 	}
 	
 

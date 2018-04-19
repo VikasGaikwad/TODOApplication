@@ -74,24 +74,31 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
 		
+		//System.out.println("@@@@@@@@@@"+notes.getCreatedDate());
+		
 		session=sessionFactory.getCurrentSession();
-		System.out.println(notes.getDescription()+"..."+notes.getTitle()+"...."+notes.getTrash());
+	
+		System.out.println(notes.getDescription()+"..."+notes.getTitle()+"...."+notes.getTrash()+" "+notes.getArchive());
+		
 		session.update(notes);
+		
 		System.out.println("Record updated...");
-		/* openSession() - obtains the current session. */
+		
+		
 		/*System.out.println("note id======" + noteId);
-		session=sessionFactory.openSession();
+		session=sessionFactory.getCurrentSession();
 		Query query = (Query) session
-				.createQuery("update Notes  set title=:title,description=:description where noteId=:noteId");
-		query.setParameter("title", notes.getTitle());
-		query.setParameter("description", notes.getDescription());
+				.createQuery("update Notes  set trash=:trash where noteId=:noteId");
+		//query.setParameter("title", notes.getTitle());
+		//query.setParameter("description", notes.getDescription());
+		query.setParameter("trash", notes.getTrash());
 		query.setParameter("noteId", noteId);
 		query.executeUpdate();*/
 
 	}
 
 	@Override
-	public boolean deleteNotes(long noteId) {
+	public boolean deleteNotes(long noteId,int user_id) {
 		session = sessionFactory.openSession();
 		try {
 			String sqlQuery = "delete from Notes where noteId=:noteId";
@@ -116,12 +123,15 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public List<Notes> getAllNotesByUserId(long userId) {
 		System.out.println("user id in notes dao impl----" + userId);
-	
+	String sqlQuery="from Notes where noteId=:noteId";
 		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notes.class);
-		
+		//Query query=session.createQuery(sqlQuery);
+		//query.setParameter("noteId", "noteId");
+		//query.executeUpdate();
 		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
-				.add(Projections.property("title"), "title").add(Projections.property("description"), "description"))
+			.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
+			.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive"))
 				.setResultTransformer(Transformers.aliasToBean(Notes.class));
 		criteria.add(Restrictions.eq("user.userId", userId));
 
@@ -137,6 +147,7 @@ public class NotesDaoImpl implements INotesDao {
 				System.out.println(notes.getTitle());
 				System.out.println(notes.getDescription());
 				System.out.println(notes.getTrash());
+				System.out.println(notes.getCreatedDate());
 				System.out.println("====================");
 			}
 		}

@@ -56,9 +56,10 @@ public class NotesController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "{noteId}/deletenote", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteNotes(@PathVariable("noteId") long noteId) {
-		notesService.deleteNotes(noteId);
+	@RequestMapping(value = "user/deletenote/{noteId}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteNotes(@PathVariable("noteId") long noteId, HttpServletRequest request) {
+		int user_id=(int) request.getAttribute("userId");
+		notesService.deleteNotes(noteId,user_id);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 

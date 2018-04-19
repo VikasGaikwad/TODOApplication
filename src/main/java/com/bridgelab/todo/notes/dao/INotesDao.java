@@ -19,7 +19,7 @@ public interface INotesDao {
 
 	
 
-	boolean deleteNotes(long noteId);
+	boolean deleteNotes(long noteId,int user_id);
 
 
 
