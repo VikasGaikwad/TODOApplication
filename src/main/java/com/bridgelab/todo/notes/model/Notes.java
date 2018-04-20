@@ -45,13 +45,14 @@ public class Notes implements Serializable {
 	
 	@Column
 	private Date createdDate;
-	
 	@Column/*(name = "trash", columnDefinition = "boolean default true", nullable = false)*/
 	private Boolean trash = false;
 	@Column
 	private Boolean archive= false;
 	@Column
 	private Boolean pin=false;
+	@Column
+	private Date reminder;
 	
 	@ManyToOne/*(fetch=FetchType.LAZY)*/
 	@JoinColumn(name="userId")
@@ -61,7 +62,8 @@ public class Notes implements Serializable {
 
 	}
 
-	public Notes(long noteId, String title, String description,boolean trash,boolean archive,boolean pin) {
+
+	public Notes(long noteId, String title, String description,boolean trash,boolean archive,boolean pin,Date reminder) {
 
 		this.noteId = noteId;
 		this.title = title;
@@ -70,6 +72,7 @@ public class Notes implements Serializable {
 		this.trash=trash;
 		this.archive=archive;
 		this.pin=pin;
+		this.reminder = reminder;
 		
 	}
 
@@ -135,6 +138,14 @@ public class Notes implements Serializable {
 
 	public void setPin(Boolean pin) {
 		this.pin = pin;
+	}
+
+	public Date getReminder() {
+		return reminder;
+	}
+
+	public void setReminder(Date reminder) {
+		this.reminder = reminder;
 	}
 
 	

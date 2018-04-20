@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.user.util;
 
+import java.util.Date;
+
 import com.bridgelab.todo.notes.model.Notes;
 
 /**
@@ -15,6 +17,8 @@ public class NotesDTO {
 	private String description;
 	private Boolean trash;
 	private Boolean archive;
+	private Boolean pin;
+	private Date reminder;
 	
 	public NotesDTO(Notes object) {
 		this.noteId=object.getNoteId();
@@ -22,6 +26,8 @@ public class NotesDTO {
 		this.description=object.getDescription();
 		this.trash=object.getTrash();
 		this.archive=object.getArchive();
+		this.pin=object.getPin();
+		this.reminder=object.getReminder();
 	
 	}
 	
@@ -67,6 +73,26 @@ public class NotesDTO {
 
 	public void setArchive(Boolean archive) {
 		this.archive = archive;
+	}
+
+
+	public Boolean getPin() {
+		return pin;
+	}
+
+
+	public void setPin(Boolean pin) {
+		this.pin = pin;
+	}
+
+
+	public Date getReminder() {
+		return reminder;
+	}
+
+
+	public void setReminder(Date reminder) {
+		this.reminder = reminder;
 	}
 	
 

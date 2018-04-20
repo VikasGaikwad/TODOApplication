@@ -73,18 +73,18 @@ public class NotesDaoImpl implements INotesDao {
 
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
-		
+
 		//System.out.println("@@@@@@@@@@"+notes.getCreatedDate());
-		
+
 		session=sessionFactory.getCurrentSession();
-	
+
 		System.out.println(notes.getDescription()+"..."+notes.getTitle()+"...."+notes.getTrash()+" "+notes.getArchive());
-		
+
 		session.update(notes);
-		
+
 		System.out.println("Record updated...");
-		
-		
+
+
 		/*System.out.println("note id======" + noteId);
 		session=sessionFactory.getCurrentSession();
 		Query query = (Query) session
@@ -123,16 +123,17 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public List<Notes> getAllNotesByUserId(long userId) {
 		System.out.println("user id in notes dao impl----" + userId);
-	String sqlQuery="from Notes where noteId=:noteId";
+		String sqlQuery="from Notes where noteId=:noteId";
 		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notes.class);
 		//Query query=session.createQuery(sqlQuery);
 		//query.setParameter("noteId", "noteId");
 		//query.executeUpdate();
 		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
-			.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
-			.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive"))
-				.setResultTransformer(Transformers.aliasToBean(Notes.class));
+				.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
+				.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive")
+				.add(Projections.property("pin"), "pin").add(Projections.property("reminder"), "reminder"))
+		.setResultTransformer(Transformers.aliasToBean(Notes.class));
 		criteria.add(Restrictions.eq("user.userId", userId));
 
 		@SuppressWarnings("unchecked")
@@ -148,6 +149,7 @@ public class NotesDaoImpl implements INotesDao {
 				System.out.println(notes.getDescription());
 				System.out.println(notes.getTrash());
 				System.out.println(notes.getCreatedDate());
+				System.out.println(notes.getReminder());
 				System.out.println("====================");
 			}
 		}
