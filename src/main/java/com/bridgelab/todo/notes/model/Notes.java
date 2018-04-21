@@ -53,6 +53,8 @@ public class Notes implements Serializable {
 	private Boolean pin=false;
 	@Column
 	private Date reminder;
+	@Column
+	private String color;
 	
 	@ManyToOne/*(fetch=FetchType.LAZY)*/
 	@JoinColumn(name="userId")
@@ -63,7 +65,7 @@ public class Notes implements Serializable {
 	}
 
 
-	public Notes(long noteId, String title, String description,boolean trash,boolean archive,boolean pin,Date reminder) {
+	public Notes(long noteId, String title, String description,boolean trash,boolean archive,boolean pin,Date reminder,String color) {
 
 		this.noteId = noteId;
 		this.title = title;
@@ -148,7 +150,12 @@ public class Notes implements Serializable {
 		this.reminder = reminder;
 	}
 
-	
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color=color;
+	}
 
 	
 

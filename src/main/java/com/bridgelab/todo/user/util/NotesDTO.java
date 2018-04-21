@@ -19,6 +19,7 @@ public class NotesDTO {
 	private Boolean archive;
 	private Boolean pin;
 	private Date reminder;
+	private String color;
 	
 	public NotesDTO(Notes object) {
 		this.noteId=object.getNoteId();
@@ -28,6 +29,7 @@ public class NotesDTO {
 		this.archive=object.getArchive();
 		this.pin=object.getPin();
 		this.reminder=object.getReminder();
+		this.color=object.getColor();
 	
 	}
 	
@@ -93,6 +95,16 @@ public class NotesDTO {
 
 	public void setReminder(Date reminder) {
 		this.reminder = reminder;
+	}
+
+
+	public String getColor() {
+		return color;
+	}
+
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 

@@ -132,7 +132,8 @@ public class NotesDaoImpl implements INotesDao {
 		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
 				.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
 				.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive")
-				.add(Projections.property("pin"), "pin").add(Projections.property("reminder"), "reminder"))
+				.add(Projections.property("pin"), "pin").add(Projections.property("reminder"), "reminder")
+				.add(Projections.property("color"), "color"))
 		.setResultTransformer(Transformers.aliasToBean(Notes.class));
 		criteria.add(Restrictions.eq("user.userId", userId));
 
@@ -150,6 +151,7 @@ public class NotesDaoImpl implements INotesDao {
 				System.out.println(notes.getTrash());
 				System.out.println(notes.getCreatedDate());
 				System.out.println(notes.getReminder());
+				System.out.println((notes.getColor()));
 				System.out.println("====================");
 			}
 		}
