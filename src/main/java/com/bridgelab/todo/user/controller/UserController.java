@@ -89,7 +89,7 @@ public class UserController {
 		try {
 
 			String token = userService.loginUser(user);
-			System.out.println("token in user controller..."+token);
+			System.out.println("token : "+token);
 
 			if (token != null) {
 

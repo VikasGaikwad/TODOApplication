@@ -22,8 +22,16 @@ public class UserDaoImpl implements IUserDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	public int registerUser(User user) {		
+			session = sessionFactory.getCurrentSession();
+			long id = (long) session.save(user);
+			return (int) id;			
+		}
+		
 
-	public int registerUser(User user) {
+	
+
+	/*public int registerUser(User user) {
 
 		try {
 			session = sessionFactory.openSession();
@@ -37,7 +45,7 @@ public class UserDaoImpl implements IUserDao {
 		}
 		return 0;
 
-	}
+	}*/
 
 	@Override
 	public User loginUser(User user) {

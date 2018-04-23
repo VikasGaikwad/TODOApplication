@@ -37,6 +37,7 @@
 			<list>
 				<value>com.bridgelab.todo.user.model.User</value>
 				<value>com.bridgelab.todo.notes.model.Notes</value>
+				<value>com.bridgelab.todo.label.model.Label</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -98,6 +99,8 @@
 	<bean id="validateBean" class="com.bridgelab.todo.user.util.Validator"></bean>
 	<bean id="notesDao" class="com.bridgelab.todo.notes.dao.NotesDaoImpl"></bean>
 	<bean id="notesService" class="com.bridgelab.todo.notes.service.NotesServiceImpl"></bean>
+	<bean id="labelDao" class="com.bridgelab.todo.label.dao.LabelDaoImpl"></bean>
+	<bean id="labelService" class="com.bridgelab.todo.label.service.LabelServiceImpl"></bean>
 
 
 

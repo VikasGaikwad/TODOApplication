@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.notes.model.Notes;
 
 /**
@@ -48,6 +49,8 @@ public class User implements Serializable {
 	
 	@OneToMany(mappedBy="user")
 	private Set<Notes> notes;
+	@OneToMany(mappedBy="user")
+	private Set<Label> label;
 	@Column
 	private String randomUUID;
 	@Column
@@ -59,17 +62,17 @@ public class User implements Serializable {
 
 	
 
-	public User(long userId, String username, String email, String password, Set<Notes> notes, String randomUUID,
-			boolean status) {
-		super();
-		this.userId = userId;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.notes = notes;
-		this.randomUUID = randomUUID;
-		this.status = status;
-	}
+//	public User(long userId, String username, String email, String password, Set<Notes> notes, String randomUUID,
+//			boolean status) {
+//		
+//		this.userId = userId;
+//		this.username = username;
+//		this.email = email;
+//		this.password = password;
+//		this.notes = notes;
+//		this.randomUUID = randomUUID;
+//		this.status = status;
+//	}
 
 
 
