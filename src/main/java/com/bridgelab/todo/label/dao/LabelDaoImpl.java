@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bridgelab.todo.label.model.Label;
+import com.bridgelab.todo.user.model.User;
 
 /**
  * @author bridgeit
@@ -24,6 +25,7 @@ public class LabelDaoImpl implements ILabelDao{
 	@Override
 	public void addLabel(Label label) {
 		Session session=sessionFactory.getCurrentSession();
+		
 		session.save(label);		
 	}
 	@Override
@@ -35,11 +37,10 @@ public class LabelDaoImpl implements ILabelDao{
 		return labelList;
 	}
 	@Override
-	public List<Label> readLabel(int id) {
-		System.out.println("#################");
+	public List<Label> readLabel(User user) {
 		Session session=sessionFactory.getCurrentSession();
 		Criteria criteria=session.createCriteria(Label.class);
-		criteria.add(Restrictions.eq("labelId", id));
+		criteria.add(Restrictions.eq("user", user));
 		@SuppressWarnings("unchecked")
 		List<Label> label=criteria.list();
 		for (Label label2 : label) {

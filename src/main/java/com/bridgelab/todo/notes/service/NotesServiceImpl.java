@@ -49,7 +49,7 @@ public class NotesServiceImpl implements INotesService {
 		user.setUserId(id);
 		notes.setUser(user);
 		notesDao.createNote(notes);
-		
+		 
 
 	}
 

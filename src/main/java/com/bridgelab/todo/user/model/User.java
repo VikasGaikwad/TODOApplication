@@ -49,10 +49,13 @@ public class User implements Serializable {
 	
 	@OneToMany(mappedBy="user")
 	private Set<Notes> notes;
+	
 	@OneToMany(mappedBy="user")
 	private Set<Label> label;
+	
 	@Column
 	private String randomUUID;
+	
 	@Column
 	private boolean status;
 

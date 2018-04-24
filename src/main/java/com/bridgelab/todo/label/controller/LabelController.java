@@ -47,7 +47,6 @@ public class LabelController {
 		System.out.println("inside label controller");
 		int id = (int) request.getAttribute("userId");
 		if (id != 0) {
-			@SuppressWarnings("unused")
 			List<Label> labelList = labelService.readLabel(id);
 			return new ResponseEntity<List<Label>>(labelList, HttpStatus.OK);
 		} else {

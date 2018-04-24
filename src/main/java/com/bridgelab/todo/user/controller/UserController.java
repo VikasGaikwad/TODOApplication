@@ -60,7 +60,7 @@ public class UserController {
 	UserService userResponse=new UserService();
 
 
-	@RequestMapping(value = "userapi/register", method = RequestMethod.POST)
+	@RequestMapping(value = "user/register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
 
 		if (Validator.validate(user.getUsername()) == true && Validator.validateEmail(user.getEmail()) == true
@@ -111,7 +111,7 @@ public class UserController {
 		}
 
 	}
-	@RequestMapping(value = "userapi/activateaccount/{token:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "user/activateaccount/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
 			HttpServletRequest request, HttpServletResponse response) {
 
@@ -141,7 +141,7 @@ public class UserController {
 		return new ResponseEntity<String>("link sent successfully", HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "userapi/resetPassword/{token:.+}", method = RequestMethod.POST)
+	@RequestMapping(value = "user/resetPassword/{token:.+}", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
 
 		//User userobj = userService.getObjByUUID(token);

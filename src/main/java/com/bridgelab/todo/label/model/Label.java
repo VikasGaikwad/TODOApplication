@@ -33,15 +33,16 @@ public class Label implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	
+
 	@Column
 	private int labelId;
 
-	
+
 	@Column
 	private String labelName;
-@ManyToOne
-@JoinColumn(name="userId")
+	
+	@ManyToOne
+	@JoinColumn(name="userId")
 	private User user;
 
 
@@ -57,7 +58,13 @@ public class Label implements Serializable{
 	public void setLabelId(int labelId) {
 		this.labelId = labelId;
 	}
-	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 
 }
 
