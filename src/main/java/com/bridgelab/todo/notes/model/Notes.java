@@ -5,6 +5,8 @@ package com.bridgelab.todo.notes.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,9 +15,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.user.model.User;
 
 /**
@@ -59,7 +64,13 @@ public class Notes implements Serializable {
 	@ManyToOne/*(fetch=FetchType.LAZY)*/
 	@JoinColumn(name="userId")
 	private User user;
+	
+	@ManyToMany
+	@JoinTable(name ="label_note", joinColumns=@JoinColumn(name="noteId"), inverseJoinColumns=@JoinColumn(name="labelId"))
+	private Set<Label> labels=new HashSet<Label>();
+	
 
+	
 	public Notes() {
 
 	}
@@ -157,6 +168,8 @@ public class Notes implements Serializable {
 		this.color=color;
 	}
 
+
+	
 	
 
 }

@@ -25,7 +25,8 @@ public class CORSFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-		
+		System.out.println("#########");
+		System.out.println("inside cors filter");
 		 response.addHeader("Access-Control-Allow-Origin", "*");
 		   response.addHeader("Access-Control-Allow-Methods", "GET, POST,OPTIONS, PUT, DELETE");
 		   response.addHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept, X-Requested-With");

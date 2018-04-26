@@ -27,7 +27,7 @@ public class InterceptorClass implements HandlerInterceptor {
 		
 		
 		String tokenSample = request.getHeader("Authorization");
-		System.out.println("-----------token in interceptor-----------\n" + tokenSample);
+		System.out.println("*********token in interceptor*********\n" + tokenSample);
 		int userId = JWT_Tokens.verifyToken(tokenSample);
 		request.setAttribute("userId", userId);
 		return true;

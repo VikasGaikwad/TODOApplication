@@ -41,24 +41,24 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public void createNote(Notes notes,int id) {
-		
+
 		Date createdDate = new Date();
 		notes.setCreatedDate(createdDate);
-		
+
 		User user=new User();
 		user.setUserId(id);
 		notes.setUser(user);
 		notesDao.createNote(notes);
-		 
+
 
 	}
 
 	@Transactional
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
-//System.out.println("##########"+noteId);
+		//System.out.println("##########"+noteId);
 		User user = userService.getUserById(noteId);
-		
+
 		/*notes.setCreatedDate(notes.getCreatedDate());*/
 		notes.setUser(user);
 		notesDao.updateNotes(notes, noteId);
@@ -70,29 +70,29 @@ public class NotesServiceImpl implements INotesService {
 		notesDao.deleteNotes(noteId,note_id);
 
 	}
-
+	@Transactional
 	@Override
 	public Notes getNoteById(long noteId) {
 
 		return notesDao.getNoteById(noteId);
 	}
-
+	@Transactional
 	@Override
 	public void readNotes(String token) {
 		int id=JWT_Tokens.verifyToken(token);
 		System.out.println("notes id : "+id);
-		
+
 		@SuppressWarnings("unused")
 		Notes notes=notesDao.getNoteById(id);
-		
-		
+
+
 	}
-@Transactional
+	@Transactional
 	@Override
 	public List<NotesDTO> getAllNotesByUserId(long userId) {
 
 		List<Notes> notes=notesDao.getAllNotesByUserId(userId);
-		
+
 		List<NotesDTO> responseDTO=new ArrayList<>();
 		for (Notes object : notes) {
 			NotesDTO obj=	new NotesDTO(object);

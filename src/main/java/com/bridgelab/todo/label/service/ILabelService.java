@@ -18,6 +18,9 @@ public interface ILabelService {
 	boolean isLabelPresent(String label);
 	List<Label> readLabel(int id);
 	boolean deleteLabel(Label label, int id);
+	public void addtheLabel(int noteId, int labelId);	
+	void deleteLabelFromNote();
+	
 	
 
 }

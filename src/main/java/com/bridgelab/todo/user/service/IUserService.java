@@ -12,24 +12,24 @@ import com.bridgelab.todo.user.model.User;
  *
  */
 public interface IUserService {
-	public void registerUser(User user, String emailVerificationUrl);
+	 void registerUser(User user, String emailVerificationUrl);
 
 	/* public String loginUser(String email, String password); */
-	public String loginUser(User user);
+	 String loginUser(User user);
 
-	public User getUserById(long userId);
+	 User getUserById(long userId);
 
-	public User sendingMail(User user);
+	 User sendingMail(User user);
 
-	public User getUserByEmail(String email);
+	 User getUserByEmail(String email);
 
-	public void forgotPassword(User user, String forgotPasswordUrl);
+	 void forgotPassword(User user, String forgotPasswordUrl);
 
-	public User getObjByUUID(String randomUUID);
+	 User getObjByUUID(String randomUUID);
 
-	public String resetPassword(String token, HttpServletRequest request, String newPassword);
+	 String resetPassword(String token, HttpServletRequest request, String newPassword);
 
-	public String activateAccount(String token, HttpServletRequest request);
+	 String activateAccount(String token, HttpServletRequest request);
 
 	
 

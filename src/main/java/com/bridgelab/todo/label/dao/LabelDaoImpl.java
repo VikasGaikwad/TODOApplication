@@ -9,14 +9,17 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.bridgelab.todo.label.model.Label;
+import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
 
 /**
  * @author bridgeit
  *
  */
+@Repository
 public class LabelDaoImpl implements ILabelDao{
 
 	@Autowired
@@ -38,7 +41,7 @@ public class LabelDaoImpl implements ILabelDao{
 	}
 	@Override
 	public List<Label> readLabel(User user) {
-		Session session=sessionFactory.getCurrentSession();
+		Session session=sessionFactory.openSession();
 		Criteria criteria=session.createCriteria(Label.class);
 		criteria.add(Restrictions.eq("user", user));
 		@SuppressWarnings("unchecked")
@@ -47,6 +50,7 @@ public class LabelDaoImpl implements ILabelDao{
 			System.out.println("labelId:-"+label2.getLabelId());
 		}
 		return label;
+		
 
 	}
 	@Override
@@ -59,5 +63,25 @@ public class LabelDaoImpl implements ILabelDao{
 
 		return row;
 	}
+	@Override
+	public void addLableOnNote(int noteId, int labelId) {
+		
+			
+			Session session = sessionFactory.getCurrentSession();
+			Query query = (Query) session.createQuery("insert into label_note (noteId,labelId)");
+			query.executeUpdate();
+		}
+	@Override
+	public Label getLabelById(int labelId) {
+		Session session;
+		String sqlQuery="from Label where labelId=:labelId";
+		session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Label.class);
+		Query query=session.createQuery(sqlQuery);
+		query.setParameter("labelId", "labelId");
+		query.executeUpdate();
+		return (Label) query;
+	}
+	
 
 }
