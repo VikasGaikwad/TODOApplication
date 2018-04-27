@@ -6,6 +6,7 @@ package com.bridgelab.todo.user.util;
 import java.util.Date;
 
 import com.bridgelab.todo.notes.model.Notes;
+import com.mysql.jdbc.Blob;
 
 /**
  * @author bridgeit
@@ -21,6 +22,8 @@ public class NotesDTO {
 	private Date reminder;
 	private String color;
 	
+	private byte[] image;
+
 	public NotesDTO(Notes object) {
 		this.noteId=object.getNoteId();
 		this.title=object.getTitle();
@@ -30,9 +33,10 @@ public class NotesDTO {
 		this.pin=object.getPin();
 		this.reminder=object.getReminder();
 		this.color=object.getColor();
+		this.image=object.getImage();
 	
 	}
-	
+
 
 	public long getNoteId() {
 		return noteId;
@@ -106,6 +110,26 @@ public class NotesDTO {
 	public void setColor(String color) {
 		this.color = color;
 	}
-	
+
+
+	public byte[] getImage() {
+		return image;
+	}
+
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+
+	/*public Blob getBlob() {
+		return bolb;
+	}
+
+
+	public void setBlob(Blob blob) {
+		this.bolb = blob;
+	}
+*/
 
 }

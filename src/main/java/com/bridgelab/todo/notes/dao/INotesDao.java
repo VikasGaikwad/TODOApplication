@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.notes.dao;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import com.bridgelab.todo.notes.model.Notes;
@@ -26,6 +28,10 @@ public interface INotesDao {
 
 	Notes getNoteById(long noteId);
 	 List<Notes> getAllNotesByUserId(long userId);
+
+	/*void uploadImage(byte[] bs) throws FileNotFoundException, IOException;*/
+
+	void uploadImage(Notes noteObject) throws IOException;
 
 	
 

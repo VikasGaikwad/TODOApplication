@@ -7,6 +7,7 @@ import java.util.List;import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -64,11 +65,13 @@ public class LabelDaoImpl implements ILabelDao{
 		return row;
 	}
 	@Override
-	public void addLableOnNote(int noteId, int labelId) {
+	public void addLabelOnNote(int noteId, int labelId) {
 		
 			
 			Session session = sessionFactory.getCurrentSession();
-			Query query = (Query) session.createQuery("insert into label_note (noteId,labelId)");
+			//Query query = (Query) session.createQuery("insert into label_note (noteId,labelId)");
+			Query query = (Query) session.createQuery("insert into label_note l_note where l_note.noteId=:noteId,l_note.labelId=:labelId");
+
 			query.executeUpdate();
 		}
 	@Override
@@ -77,10 +80,11 @@ public class LabelDaoImpl implements ILabelDao{
 		String sqlQuery="from Label where labelId=:labelId";
 		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Label.class);
-		Query query=session.createQuery(sqlQuery);
-		query.setParameter("labelId", "labelId");
-		query.executeUpdate();
-		return (Label) query;
+		criteria.add(Restrictions.eq("labelId", labelId));
+		Label label = (Label) criteria.uniqueResult();
+		return label;
+		
+		
 	}
 	
 

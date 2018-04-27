@@ -3,6 +3,9 @@
  */
 package com.bridgelab.todo.notes.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -56,10 +59,11 @@ public class NotesDaoImpl implements INotesDao {
 		return sessionFactory.getCurrentSession();
 	}
 
+	/*-------------------------------------------------------------------------*/
 	@Override
 	public int createNote(Notes notes) {
 
-		System.out.println(notes.getTitle()+"......"+notes.getTrash());
+		System.out.println(notes.getTitle() + "......" + notes.getTrash());
 		/* getCurrentSession()-Obtains the current session. */
 		session = sessionFactory.getCurrentSession();
 		/*
@@ -70,35 +74,22 @@ public class NotesDaoImpl implements INotesDao {
 		return (int) notedata;
 
 	}
+	/*-------------------------------------------------------------------------*/
 
 	@Override
 	public void updateNotes(Notes notes, long noteId) {
 
-		//System.out.println("@@@@@@@@@@"+notes.getCreatedDate());
+		session = sessionFactory.getCurrentSession();
 
-		session=sessionFactory.getCurrentSession();
-
-		System.out.println(notes.getDescription()+"..."+notes.getTitle()+"...."+notes.getTrash()+" "+notes.getArchive());
-
+		System.out.println(notes.getDescription() + "..." + notes.getTitle() + "...." + notes.getTrash() + " "
+				+ notes.getArchive());
 		session.update(notes);
-
 		System.out.println("Record updated...");
-
-
-		/*System.out.println("note id======" + noteId);
-		session=sessionFactory.getCurrentSession();
-		Query query = (Query) session
-				.createQuery("update Notes  set trash=:trash where noteId=:noteId");
-		//query.setParameter("title", notes.getTitle());
-		//query.setParameter("description", notes.getDescription());
-		query.setParameter("trash", notes.getTrash());
-		query.setParameter("noteId", noteId);
-		query.executeUpdate();*/
-
 	}
+	/*-------------------------------------------------------------------------*/
 
 	@Override
-	public boolean deleteNotes(long noteId,int user_id) {
+	public boolean deleteNotes(long noteId, int user_id) {
 		session = sessionFactory.openSession();
 		try {
 			String sqlQuery = "delete from Notes where noteId=:noteId";
@@ -114,21 +105,19 @@ public class NotesDaoImpl implements INotesDao {
 		}
 		return true;
 	}
+	/*-------------------------------------------------------------------------*/
 
 	@Override
 	public Notes getNoteById(long noteId) {
 		return (Notes) sessionFactory.openSession().get(Notes.class, noteId);
 	}
-
+	/*-------------------------------------------------------------------------*/
 	@Override
 	public List<Notes> getAllNotesByUserId(long userId) {
 		System.out.println("user id in notes dao impl----" + userId);
-		String sqlQuery="from Notes where noteId=:noteId";
+		String sqlQuery = "from Notes where noteId=:noteId";
 		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notes.class);
-		//Query query=session.createQuery(sqlQuery);
-		//query.setParameter("noteId", "noteId");
-		//query.executeUpdate();
 		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
 				.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
 				.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive")
@@ -157,5 +146,25 @@ public class NotesDaoImpl implements INotesDao {
 		}
 		return list;
 	}
+	/*-------------------------------------------------------------------------*/
+
+	@Override
+	public void uploadImage(Notes noteObject) throws IOException {
+		session = sessionFactory.getCurrentSession();
+		File file=new File(noteObject.getImage().toString());
+		byte[] b= new byte[(int) file.length()];
+		 FileInputStream fileInputStream = new FileInputStream(file);
+		 
+		 
+		 //convert file into array of bytes
+		 fileInputStream.read(b);
+		 session.update(fileInputStream);
+		 fileInputStream.close();
+		// session.getTransaction().commit();
+		 	
+		System.out.println("image saved successfully");
+	}
+
+	/*-------------------------------------------------------------------------*/
 
 }

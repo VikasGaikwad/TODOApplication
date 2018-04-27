@@ -13,7 +13,7 @@ public class LabelDTO {
 	private int labelId;
 	private String labelName;
 	public LabelDTO(Label label) {
-		super();
+		
 		this.labelId = label.getLabelId();
 		this.labelName = label.getLabelName();
 	}

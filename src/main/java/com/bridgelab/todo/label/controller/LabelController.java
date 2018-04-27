@@ -81,7 +81,7 @@ public class LabelController {
 		
 		if(status) {
 			
-			labelService.addtheLabel(noteId, labelId);
+			labelService.addLabelOnNote(noteId, labelId);
 			
 			
 		}else if(!status) {

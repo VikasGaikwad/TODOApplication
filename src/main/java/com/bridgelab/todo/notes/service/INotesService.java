@@ -3,11 +3,14 @@
  */
 package com.bridgelab.todo.notes.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
+import com.bridgelab.todo.user.util.ImageDTO;
 import com.bridgelab.todo.user.util.NotesDTO;
 
 /**
@@ -27,6 +30,9 @@ public interface INotesService {
 
 	void readNotes(String token);
 	List<NotesDTO> getAllNotesByUserId(long userId);
+
+
+	void uploadImage(ImageDTO imagedto, int userId) throws FileNotFoundException, IOException;
 	
 
 	

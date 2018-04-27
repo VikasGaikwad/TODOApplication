@@ -22,7 +22,7 @@ public interface ILabelDao {
 
 	int deleteLabels(Label label, int id);
 
-	void addLableOnNote(int noteId, int labelId);
+	void addLabelOnNote(int noteId, int labelId);
 
 	Label getLabelById(int labelId);
 

@@ -16,12 +16,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.user.model.User;
+import com.mysql.jdbc.Blob;
 
 /**
  * @author bridgeit
@@ -29,64 +32,80 @@ import com.bridgelab.todo.user.model.User;
  */
 
 @Entity
-@Table(name="notes")
+@Table(name = "notes")
 public class Notes implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1802508173596798656L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private long noteId;
-	
+
 	@Column
-	private String title;	
-	
+	private String title;
+
 	@Column
 	private String description;
-	
+
 	@Column
 	private Date createdDate;
-	@Column/*(name = "trash", columnDefinition = "boolean default true", nullable = false)*/
+	@Column /*
+			 * (name = "trash", columnDefinition = "boolean default true", nullable = false)
+			 */
 	private Boolean trash = false;
 	@Column
-	private Boolean archive= false;
+	private Boolean archive = false;
 	@Column
-	private Boolean pin=false;
+	private Boolean pin = false;
 	@Column
 	private Date reminder;
 	@Column
 	private String color;
-	
-	@ManyToOne/*(fetch=FetchType.LAZY)*/
-	@JoinColumn(name="userId")
-	private User user;
-	
-	@ManyToMany
-	@JoinTable(name ="label_note", joinColumns=@JoinColumn(name="noteId"), inverseJoinColumns=@JoinColumn(name="labelId"))
-	private Set<Label> labels=new HashSet<Label>();
+	@Transient
+	private String fullPath;
 	
 
-	
+	/*
+	 * BLOB - Specifies that a persistent property or field should be persisted as a
+	 * large object to a database- supported large object type.
+	 */
+	@Lob
+	@Column
+	private byte[] image;
+
+	@ManyToOne /* (fetch=FetchType.LAZY) */
+	@JoinColumn(name = "userId")
+	private User user;
+
+	@ManyToMany
+	@JoinTable(name = "label_note", joinColumns = @JoinColumn(name = "noteId"), inverseJoinColumns = @JoinColumn(name = "labelId"))
+	private Set<Label> labels = new HashSet<Label>();
+
 	public Notes() {
 
 	}
 
-
-	public Notes(long noteId, String title, String description,boolean trash,boolean archive,boolean pin,Date reminder,String color) {
+	public Notes(long noteId, String title, String description, boolean trash, boolean archive, boolean pin,
+			Date reminder, String color) {
 
 		this.noteId = noteId;
 		this.title = title;
 		this.description = description;
 		this.createdDate = createdDate;
-		this.trash=trash;
-		this.archive=archive;
-		this.pin=pin;
+		this.trash = trash;
+		this.archive = archive;
+		this.pin = pin;
 		this.reminder = reminder;
-		
+
+	}
+
+	public Notes(byte[] image) {
+
+		this.image = image;
 	}
 
 	public long getNoteId() {
@@ -164,12 +183,25 @@ public class Notes implements Serializable {
 	public String getColor() {
 		return color;
 	}
+
 	public void setColor(String color) {
-		this.color=color;
+		this.color = color;
 	}
 
+	public byte[] getImage() {
+		return image;
+	}
 
-	
-	
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getFullPath() {
+		return fullPath;
+	}
+
+	public void setFullPath(String fullPath) {
+		this.fullPath = fullPath;
+	}
 
 }
