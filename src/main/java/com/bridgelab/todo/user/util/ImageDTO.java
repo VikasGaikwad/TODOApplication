@@ -7,9 +7,11 @@ package com.bridgelab.todo.user.util;
  * @author bridgeit
  *
  */
-public class ImageDTO {
+public class ImageDTO 
+{
 	private int noteId;
 	private String fullPath;
+	
 	public int getNoteId() {
 		return noteId;
 	}

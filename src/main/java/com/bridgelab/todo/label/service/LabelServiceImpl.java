@@ -4,6 +4,7 @@
 package com.bridgelab.todo.label.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,11 @@ public class LabelServiceImpl implements ILabelService {
 
 	@Autowired
 	IUserService userService;
-	
+
 	@Autowired
 	INotesService notesService;
-	
-	
+
+
 
 	@Transactional
 	@Override
@@ -80,18 +81,25 @@ public class LabelServiceImpl implements ILabelService {
 
 	@Transactional
 	@Override
-	public void deleteLabelFromNote() {
-
+	public void deleteLabelFromNote(int labelId, int noteId) {
+		labelDao.deleteLabelFromNotes(labelId, noteId);
 	}
 
 	@Transactional
 	@Override
-	public void addLabelOnNote(int noteId, int labelId) {
-		Notes notes=notesService.getNoteById(noteId);
-		//System.out.println("label service impl- title -"+notes.getTitle());
+	public void addLabelOnNote(int labelId, int noteId) {
+ 
+		
+	
+		Notes note=notesService.getNoteById(noteId);
+
+		System.out.println("labelservice impl note id"+note.getNoteId());
+		System.out.println("label service impl- title -"+note.getNoteId());
 		Label label=labelDao.getLabelById(labelId);
-		//System.out.println("label service impl- name -"+label.getLabelName());
-		labelDao.addLabelOnNote(noteId, labelId);
+		System.out.println("label service impl- name -"+label.getLabelId());
+		note.getLabels().add(label);
+
+		labelDao.addLabelOnNote(note);
 
 	}
 }

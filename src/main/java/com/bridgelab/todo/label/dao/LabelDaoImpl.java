@@ -29,7 +29,7 @@ public class LabelDaoImpl implements ILabelDao{
 	@Override
 	public void addLabel(Label label) {
 		Session session=sessionFactory.getCurrentSession();
-		
+
 		session.save(label);		
 	}
 	@Override
@@ -51,7 +51,7 @@ public class LabelDaoImpl implements ILabelDao{
 			System.out.println("labelId:-"+label2.getLabelId());
 		}
 		return label;
-		
+
 
 	}
 	@Override
@@ -65,15 +65,16 @@ public class LabelDaoImpl implements ILabelDao{
 		return row;
 	}
 	@Override
-	public void addLabelOnNote(int noteId, int labelId) {
-		
-			
-			Session session = sessionFactory.getCurrentSession();
-			//Query query = (Query) session.createQuery("insert into label_note (noteId,labelId)");
-			Query query = (Query) session.createQuery("insert into label_note l_note where l_note.noteId=:noteId,l_note.labelId=:labelId");
+	public void addLabelOnNote(Notes note) {
 
-			query.executeUpdate();
-		}
+
+		Session session = sessionFactory.getCurrentSession();
+		/*Query query = (Query) session.createQuery("insert into label_note (note)");
+		//Query query = (Query) session.createQuery("insert into label_note l_note where l_note.noteId=:noteId,l_note.labelId=:labelId");
+		//session.save(noteId,id);
+		query.executeUpdate();*/
+		session.save(note);
+	}
 	@Override
 	public Label getLabelById(int labelId) {
 		Session session;
@@ -83,9 +84,19 @@ public class LabelDaoImpl implements ILabelDao{
 		criteria.add(Restrictions.eq("labelId", labelId));
 		Label label = (Label) criteria.uniqueResult();
 		return label;
-		
-		
+
+
 	}
-	
+	@Override
+	public void deleteLabelFromNotes(int labelId, int noteId) {
+		Session session=sessionFactory.getCurrentSession();
+		String hql="delete from label_note  where noteId=:noteId,labelId=:labelId";
+		Query query=session.createQuery(hql);
+		query.setParameter("noteId", noteId);
+		query.setParameter("labelId", labelId);
+
+		query.executeUpdate();
+	}
+
 
 }

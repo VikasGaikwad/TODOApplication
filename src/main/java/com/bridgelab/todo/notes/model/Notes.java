@@ -67,7 +67,9 @@ public class Notes implements Serializable {
 	private String color;
 	@Transient
 	private String fullPath;
-	
+	/*
+	 * @Transient private Label label;
+	 */
 
 	/*
 	 * BLOB - Specifies that a persistent property or field should be persisted as a
@@ -82,7 +84,8 @@ public class Notes implements Serializable {
 	private User user;
 
 	@ManyToMany
-	@JoinTable(name = "label_note", joinColumns = @JoinColumn(name = "noteId"), inverseJoinColumns = @JoinColumn(name = "labelId"))
+	@JoinTable(name = "label_note", joinColumns = { @JoinColumn(name = "noteId") }, inverseJoinColumns = {
+			@JoinColumn(name = "labelId") })
 	private Set<Label> labels = new HashSet<Label>();
 
 	public Notes() {
@@ -203,5 +206,19 @@ public class Notes implements Serializable {
 	public void setFullPath(String fullPath) {
 		this.fullPath = fullPath;
 	}
+
+	public Set<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(Set<Label> labels) {
+		this.labels = labels;
+	}
+
+	/*
+	 * public Label getLabel() { return label; }
+	 * 
+	 * public void setLabel(Label label) { this.label = label; }
+	 */
 
 }

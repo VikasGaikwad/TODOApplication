@@ -24,8 +24,7 @@ import javax.persistence.Table;
 
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
-
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author bridgeit
@@ -33,56 +32,71 @@ import com.bridgelab.todo.user.model.User;
  */
 
 @Entity
-@Table(name="Label")
-public class Label implements Serializable{
+@Table(name = "Label")
+public class Label implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4714410718904027615L;
+
+	/**
+	 * 
+	 */
+	
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 
 	@Column
 	private int labelId;
 
-
 	@Column
 	private String labelName;
-	
-	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "labels")
-	private Set<Notes> notes=new HashSet<Notes>();
-	
-	@ManyToOne
-	@JoinColumn(name="userId")
-	private User user;
-	
-	public Label() {
-		
-	}
+	private Set<Notes> notes = new HashSet<Notes>();
 
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	private User user;
+
+	public Label() {
+
+	}
 
 	public String getLabelName() {
 		return labelName;
 	}
+
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
 	}
+
 	public int getLabelId() {
 		return labelId;
 	}
+
 	public void setLabelId(int labelId) {
 		this.labelId = labelId;
 	}
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public Set<Notes> getNotes() {
 		return notes;
 	}
+
 	public void setNotes(Set<Notes> notes) {
 		this.notes = notes;
 	}
+
 	public Label(int labelId, String labelName, Set<Notes> notes, User user) {
 		this.labelId = labelId;
 		this.labelName = labelName;
@@ -90,6 +104,4 @@ public class Label implements Serializable{
 		this.user = user;
 	}
 
-
 }
-

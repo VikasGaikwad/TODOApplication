@@ -6,6 +6,7 @@ package com.bridgelab.todo.label.dao;
 import java.util.List;
 
 import com.bridgelab.todo.label.model.Label;
+import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.model.User;
 
 /**
@@ -22,9 +23,11 @@ public interface ILabelDao {
 
 	int deleteLabels(Label label, int id);
 
-	void addLabelOnNote(int noteId, int labelId);
+	void addLabelOnNote(Notes note);
 
 	Label getLabelById(int labelId);
+
+	void deleteLabelFromNotes(int labelId, int noteId);
 
 
 

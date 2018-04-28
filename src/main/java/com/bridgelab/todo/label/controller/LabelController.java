@@ -73,23 +73,27 @@ public class LabelController {
 	//-------------------------------------------------------------------------//
 	
 	
-	@RequestMapping(value="user/addLabelOnNotes/{noteId}/{labelId}/{checked}", method= RequestMethod.PUT)
+	@RequestMapping(value="user/addLabelOnNotes/{labelId}/{noteId}/{checked}", method= RequestMethod.PUT)
 	public ResponseEntity<?> addLabelOnNote(@PathVariable("noteId") int noteId, @PathVariable("labelId") int labelId,
 			@PathVariable("checked") String checked){
 		
 		boolean status = Boolean.valueOf(checked);
-		
+		System.out.println("status---"+status);
 		if(status) {
+			System.out.println("note id controller- title -"+noteId);
+			System.out.println("label id controller- name -"+labelId);
+
+			labelService.addLabelOnNote( labelId, noteId);
 			
-			labelService.addLabelOnNote(noteId, labelId);
-			
-			
+			/*return new ResponseEntity<>(HttpStatus.OK);*/
 		}else if(!status) {
 			
-			labelService.deleteLabelFromNote();
+			labelService.deleteLabelFromNote(labelId, noteId);
+			/*return new ResponseEntity<>(HttpStatus.OK);*/
 		}
-	
+	/*	return new ResponseEntity<>(HttpStatus.CONFLICT);*/
 		return null;
+		
 			
 		
 	}

@@ -105,13 +105,18 @@ public class NotesDaoImpl implements INotesDao {
 		}
 		return true;
 	}
+	
+	
 	/*-------------------------------------------------------------------------*/
 
 	@Override
 	public Notes getNoteById(long noteId) {
-		return (Notes) sessionFactory.openSession().get(Notes.class, noteId);
+		return (Notes) sessionFactory.getCurrentSession().get(Notes.class, noteId);
 	}
 	/*-------------------------------------------------------------------------*/
+	
+	
+	
 	@Override
 	public List<Notes> getAllNotesByUserId(long userId) {
 		System.out.println("user id in notes dao impl----" + userId);
