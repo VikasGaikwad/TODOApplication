@@ -55,11 +55,11 @@ public class LabelDaoImpl implements ILabelDao{
 
 	}
 	@Override
-	public int deleteLabels(Label label, int id) {
+	public int deleteLabels(int labelId, int id) {
 		Session session=sessionFactory.getCurrentSession();
-		String hql="delete from Label label where label.labelId=:labelId";
+		String hql="delete from Label  where labelId=:labelId";
 		Query query=session.createQuery(hql);
-		query.setParameter("labelId", label);
+		query.setParameter("labelId",labelId);
 		int row=query.executeUpdate();
 
 		return row;
@@ -96,6 +96,13 @@ public class LabelDaoImpl implements ILabelDao{
 		query.setParameter("labelId", labelId);
 
 		query.executeUpdate();
+	}
+	@Override
+	public void updateLabel(Label label) {
+		Session session = sessionFactory.getCurrentSession();
+		session.update(label);
+		System.out.println("label renamed successfully");
+		
 	}
 
 

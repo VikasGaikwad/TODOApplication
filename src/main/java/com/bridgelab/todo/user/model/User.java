@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -58,6 +59,10 @@ public class User implements Serializable {
 	
 	@Column
 	private boolean status;
+	
+	@Column
+	@Lob
+	private byte[] image;
 
 	public User() {
 
@@ -126,5 +131,19 @@ public class User implements Serializable {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
+
+
+	public byte[] getImage() {
+		return image;
+	}
+
+
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+	
+	
 
 }

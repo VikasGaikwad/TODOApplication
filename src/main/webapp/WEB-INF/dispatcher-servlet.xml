@@ -38,6 +38,7 @@
 				<value>com.bridgelab.todo.user.model.User</value>
 				<value>com.bridgelab.todo.notes.model.Notes</value>
 				<value>com.bridgelab.todo.label.model.Label</value>
+				<value>com.bridgelab.todo.collaborator.model.Collaborator</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -92,7 +93,9 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
-
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="100000"/>
+</bean>
 
 	<bean id="userDao" class="com.bridgelab.todo.user.dao.UserDaoImpl"></bean>
 	<bean id="userService" class="com.bridgelab.todo.user.service.UserServiceImpl"></bean>
@@ -101,6 +104,8 @@
 	<bean id="notesService" class="com.bridgelab.todo.notes.service.NotesServiceImpl"></bean>
 	<bean id="labelDao" class="com.bridgelab.todo.label.dao.LabelDaoImpl"></bean>
 	<bean id="labelService" class="com.bridgelab.todo.label.service.LabelServiceImpl"></bean>
+	<bean id="collaboratorDao" class="com.bridgelab.todo.collaborator.dao.CollaboratorDaoImpl"></bean>
+	<bean id="collaboratorService" class="com.bridgelab.todo.collaborator.service.CollaboratorServiceImpl"></bean>
 
 
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.label.service.ILabelService;
+import com.bridgelab.todo.notes.model.Notes;
 
 /**
  * @author bridgeit
@@ -43,7 +44,7 @@ public class LabelController {
 
 	// ---------------------------------------------------------------------- //
 
-	/*when mapping  userId, code need to be chenge */ 
+	
 	@RequestMapping(value = "user/readLabel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Label>> readLabel(HttpServletRequest request) {
 		System.out.println("inside label controller");
@@ -57,11 +58,13 @@ public class LabelController {
 	}
 	// ----------------------------------------------------------------------- //
 
-	@RequestMapping(value="user/deletelabel", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deletelabel(@RequestBody Label label,HttpServletRequest request){
+	@RequestMapping(value="user/deletelabel/{labelId}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deletelabel(@PathVariable("labelId") int labelId,HttpServletRequest request){
 		int id=(int) request.getAttribute("userId");
+		
+		System.out.println("label id ="+labelId);
 		try {
-			labelService.deleteLabel(label,id);
+			labelService.deleteLabel(labelId,labelId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -97,4 +100,13 @@ public class LabelController {
 			
 		
 	}
+	
+	@RequestMapping(value = "user/updatelabel", method = RequestMethod.POST)
+	public ResponseEntity<String> updateLabel(@RequestBody Label label, HttpServletRequest request) {
+		int userId = (int) request.getAttribute("userId");
+		System.out.println("id =>" + userId);
+		labelService.updateLabel(label, userId);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
 }

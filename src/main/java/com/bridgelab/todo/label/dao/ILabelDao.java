@@ -21,13 +21,15 @@ public interface ILabelDao {
 
 	List<Label> readLabel(User user);
 
-	int deleteLabels(Label label, int id);
+	int deleteLabels(int labelId, int id);
 
 	void addLabelOnNote(Notes note);
 
 	Label getLabelById(int labelId);
 
 	void deleteLabelFromNotes(int labelId, int noteId);
+
+	void updateLabel(Label label);
 
 
 

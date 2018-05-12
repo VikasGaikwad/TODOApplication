@@ -75,9 +75,11 @@ public class Notes implements Serializable {
 	 * BLOB - Specifies that a persistent property or field should be persisted as a
 	 * large object to a database- supported large object type.
 	 */
+	
+	@Column(length=100000)
 	@Lob
-	@Column
 	private byte[] image;
+	//private String image;
 
 	@ManyToOne /* (fetch=FetchType.LAZY) */
 	@JoinColumn(name = "userId")
@@ -103,13 +105,14 @@ public class Notes implements Serializable {
 		this.archive = archive;
 		this.pin = pin;
 		this.reminder = reminder;
+		
 
 	}
 
-	public Notes(byte[] image) {
+	/*public Notes(byte[] image) {
 
 		this.image = image;
-	}
+	}*/
 
 	public long getNoteId() {
 		return noteId;
@@ -191,13 +194,13 @@ public class Notes implements Serializable {
 		this.color = color;
 	}
 
-	public byte[] getImage() {
+	/*public byte[] getImage() {
 		return image;
 	}
 
 	public void setImage(byte[] image) {
 		this.image = image;
-	}
+	}*/
 
 	public String getFullPath() {
 		return fullPath;
@@ -215,10 +218,17 @@ public class Notes implements Serializable {
 		this.labels = labels;
 	}
 
-	/*
-	 * public Label getLabel() { return label; }
-	 * 
-	 * public void setLabel(Label label) { this.label = label; }
-	 */
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	
+
+
+	
 
 }

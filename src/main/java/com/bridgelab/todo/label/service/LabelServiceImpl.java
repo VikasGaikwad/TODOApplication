@@ -4,7 +4,6 @@
 package com.bridgelab.todo.label.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.label.dao.ILabelDao;
 import com.bridgelab.todo.label.model.Label;
-import com.bridgelab.todo.notes.dao.INotesDao;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.notes.service.INotesService;
 import com.bridgelab.todo.user.model.User;
@@ -71,8 +69,8 @@ public class LabelServiceImpl implements ILabelService {
 
 	@Transactional
 	@Override
-	public boolean deleteLabel(Label label, int id) {
-		int row = labelDao.deleteLabels(label, id);
+	public boolean deleteLabel(int labelId, int id) {
+		int row = labelDao.deleteLabels(labelId, id);
 		if (row != 0) {
 			return true;
 		}
@@ -88,9 +86,9 @@ public class LabelServiceImpl implements ILabelService {
 	@Transactional
 	@Override
 	public void addLabelOnNote(int labelId, int noteId) {
- 
-		
-	
+
+
+
 		Notes note=notesService.getNoteById(noteId);
 
 		System.out.println("labelservice impl note id"+note.getNoteId());
@@ -101,5 +99,14 @@ public class LabelServiceImpl implements ILabelService {
 
 		labelDao.addLabelOnNote(note);
 
+	}
+	@Transactional
+	@Override
+	public void updateLabel(Label label, int userId) {
+		User userObj = new User();
+		//User userObj=null;
+		userObj.setUserId(userId);
+		label.setUser(userObj);
+		labelDao.updateLabel(label);
 	}
 }

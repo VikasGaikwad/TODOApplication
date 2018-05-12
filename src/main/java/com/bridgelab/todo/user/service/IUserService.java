@@ -3,7 +3,11 @@
  */
 package com.bridgelab.todo.user.service;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelab.todo.user.model.User;
 
@@ -30,6 +34,8 @@ public interface IUserService {
 	 String resetPassword(String token, HttpServletRequest request, String newPassword);
 
 	 String activateAccount(String token, HttpServletRequest request);
+
+	void saveImage(MultipartFile fileUpload, int userId) throws IOException;
 
 	
 

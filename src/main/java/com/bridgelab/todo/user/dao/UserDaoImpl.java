@@ -93,6 +93,11 @@ public class UserDaoImpl implements IUserDao {
 		criteria.add(Restrictions.eq("email", email));
 		User user = (User) criteria.uniqueResult();
 		return user;
+		
+		/*String hql="from User where email=:email";
+		Query query=session.createQuery(hql);
+		query.setParameter("email", email);
+		return (User) query.list().get(0);*/
 	}
 
 	@Override
@@ -108,7 +113,6 @@ public class UserDaoImpl implements IUserDao {
 
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
-
 		User user3 = (User) criteria.uniqueResult();
 		System.out.println("userdaoimpl..........." + user3.getRandomUUID());
 		return user3;

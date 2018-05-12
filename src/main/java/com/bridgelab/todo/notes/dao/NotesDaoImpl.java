@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.AliasToBeanConstructorResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -82,7 +83,7 @@ public class NotesDaoImpl implements INotesDao {
 		session = sessionFactory.getCurrentSession();
 
 		System.out.println(notes.getDescription() + "..." + notes.getTitle() + "...." + notes.getTrash() + " "
-				+ notes.getArchive());
+				+ notes.getArchive()+"..."+notes.getImage());
 		session.update(notes);
 		System.out.println("Record updated...");
 	}
@@ -113,22 +114,24 @@ public class NotesDaoImpl implements INotesDao {
 	public Notes getNoteById(long noteId) {
 		return (Notes) sessionFactory.getCurrentSession().get(Notes.class, noteId);
 	}
+	
+	
+	
 	/*-------------------------------------------------------------------------*/
 	
 	
 	
 	@Override
 	public List<Notes> getAllNotesByUserId(long userId) {
-		System.out.println("user id in notes dao impl----" + userId);
-		String sqlQuery = "from Notes where noteId=:noteId";
+		//String sqlQuery = "from Notes where noteId=:noteId";
 		session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(Notes.class);
-		criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
+		/*criteria.setProjection(Projections.projectionList().add(Projections.property("noteId"), "noteId")
 				.add(Projections.property("title"), "title").add(Projections.property("description"), "description")
 				.add(Projections.property("trash"), "trash").add(Projections.property("archive"), "archive")
 				.add(Projections.property("pin"), "pin").add(Projections.property("reminder"), "reminder")
 				.add(Projections.property("color"), "color"))
-		.setResultTransformer(Transformers.aliasToBean(Notes.class));
+		.setResultTransformer(Transformers.aliasToBean(Notes.class));*/
 		criteria.add(Restrictions.eq("user.userId", userId));
 
 		@SuppressWarnings("unchecked")
@@ -154,20 +157,25 @@ public class NotesDaoImpl implements INotesDao {
 	/*-------------------------------------------------------------------------*/
 
 	@Override
-	public void uploadImage(Notes noteObject) throws IOException {
-		session = sessionFactory.getCurrentSession();
-		File file=new File(noteObject.getImage().toString());
-		byte[] b= new byte[(int) file.length()];
-		 FileInputStream fileInputStream = new FileInputStream(file);
-		 
-		 
-		 //convert file into array of bytes
-		 fileInputStream.read(b);
-		 session.update(fileInputStream);
-		 fileInputStream.close();
-		// session.getTransaction().commit();
-		 	
-		System.out.println("image saved successfully");
+	public void saveImage(Notes noteImage) {
+		sessionFactory.getCurrentSession().save(noteImage);		
+	}
+	@Override
+	public void downloadImage(int noteId) {	
+	//String hql="from Notes where noteId=:noteId";	
+	session=sessionFactory.getCurrentSession();
+	Criteria criteria=session.createCriteria(Notes.class);
+	criteria.setProjection(Projections.projectionList().add(Projections.property("image"),"image"));
+	criteria.add(Restrictions.eq("noteId", noteId));
+	}
+
+	@Override
+	public void deleteImage(int noteId) {
+		String delete_hql="delete image from Notes where noteId=:noteId";
+		Query query=session.createQuery(delete_hql);
+		query.setParameter("noteId", noteId);
+		query.executeUpdate();
+		
 	}
 
 	/*-------------------------------------------------------------------------*/

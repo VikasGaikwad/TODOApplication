@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelab.todo.notes.dao.INotesDao;
 import com.bridgelab.todo.notes.model.Notes;
@@ -35,6 +36,7 @@ public class NotesServiceImpl implements INotesService {
 
 	@Autowired
 	IUserService userService;
+
 	/*
 	 * @Transactional - It is necessary that if you are interacting with the
 	 * database either to update or insert or delete you must need to perform this
@@ -43,16 +45,15 @@ public class NotesServiceImpl implements INotesService {
 	 */
 	@Transactional
 	@Override
-	public void createNote(Notes notes,int id) {
+	public void createNote(Notes notes, int id) {
 
 		Date createdDate = new Date();
 		notes.setCreatedDate(createdDate);
 
-		User user=new User();
+		User user = new User();
 		user.setUserId(id);
 		notes.setUser(user);
 		notesDao.createNote(notes);
-
 
 	}
 	/*--------------------------------------------------------*/
@@ -62,17 +63,19 @@ public class NotesServiceImpl implements INotesService {
 	public void updateNotes(Notes notes, long noteId) {
 
 		User user = userService.getUserById(noteId);
-		/*notes.setCreatedDate(notes.getCreatedDate());*/
+		/* notes.setCreatedDate(notes.getCreatedDate()); */
 		notes.setUser(user);
 		notesDao.updateNotes(notes, noteId);
 	}
+
 	/*--------------------------------------------------------*/
 	@Transactional
 	@Override
-	public void deleteNotes(long noteId,int note_id) {
-		notesDao.deleteNotes(noteId,note_id);
+	public void deleteNotes(long noteId, int note_id) {
+		notesDao.deleteNotes(noteId, note_id);
 
 	}
+
 	/*--------------------------------------------------------*/
 	@Transactional
 	@Override
@@ -80,40 +83,57 @@ public class NotesServiceImpl implements INotesService {
 
 		return notesDao.getNoteById(noteId);
 	}
+
 	/*--------------------------------------------------------*/
 	@Transactional
 	@Override
 	public void readNotes(String token) {
-		int id=JWT_Tokens.verifyToken(token);
-		System.out.println("notes id : "+id);
+		int id = JWT_Tokens.verifyToken(token);
+		System.out.println("notes id : " + id);
 		@SuppressWarnings("unused")
-		Notes notes=notesDao.getNoteById(id);
+		Notes notes = notesDao.getNoteById(id);
 	}
+
 	/*--------------------------------------------------------*/
 	@Transactional
 	@Override
 	public List<NotesDTO> getAllNotesByUserId(long userId) {
-		List<Notes> notes=notesDao.getAllNotesByUserId(userId);
-		List<NotesDTO> responseDTO=new ArrayList<>();
+		List<Notes> notes = notesDao.getAllNotesByUserId(userId);
+		List<NotesDTO> responseDTO = new ArrayList<>();
 		for (Notes object : notes) {
-			NotesDTO obj=	new NotesDTO(object);
+			NotesDTO obj = new NotesDTO(object);
 			responseDTO.add(obj);
 		}
 		return responseDTO;
 	}
-	
+
 	/*--------------------------------------------------------*/
+
 	@Transactional
 	@Override
-	public void uploadImage(ImageDTO imagedto, int userId) throws FileNotFoundException, IOException {
-		Notes noteObject=new Notes();
-		User user=new User();
-		noteObject.setNoteId(imagedto.getNoteId());
-		noteObject.setFullPath(imagedto.getFullPath());
-		user.setUserId(userId);
-		noteObject.setUser(user);
-		notesDao.uploadImage(noteObject);
-		
-
+	public void saveImage(MultipartFile fileUpload, int noteId) throws IOException {
+		Notes note = notesDao.getNoteById(noteId);
+		note.setImage(fileUpload.getBytes());
+		notesDao.updateNotes(note, noteId);
 	}
+	/*--------------------------------------------------------*/
+
+	@Override
+	public void downloadImage(int noteId) {
+		//Notes note = notesDao.getNoteById(noteId);
+		notesDao.downloadImage(noteId);
+		
+	}
+
+	@Override
+	public void deleteImage(int noteId) {
+		notesDao.deleteImage(noteId);
+		
+	}
+
+	
+	
+	/*--------------------------------------------------------*/
+
+
 }

@@ -17,7 +17,8 @@ public interface IUserDao {
 
 	User loginUser(User user);
 
-	User getUserById(long userId);
+	User getUserById(long  userId);
+	
 
 	User sendingMail(User user);
 

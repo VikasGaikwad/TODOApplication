@@ -20,7 +20,6 @@ import com.bridgelab.todo.user.service.IUserService;
  */
 public class InterceptorClass implements HandlerInterceptor {
 	
-	private IUserService userService;
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -32,22 +31,7 @@ public class InterceptorClass implements HandlerInterceptor {
 		request.setAttribute("userId", userId);
 		return true;
 	}
-		/*
-		if(!request.getMethod().equals(null)) {
-			
-			int id = JWT_Tokens.verifyToken(request.getHeader("Authorization"));
-			request.setAttribute("id", id);
-			
-			
-			User user = userService.getUserById(id);
-			
-			if(user==null) {
-				return false;
-			}
-		}
 		
-		return true;
-	}*/
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,

@@ -3,6 +3,7 @@
  */
 package com.bridgelab.todo.user.service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.dao.IUserDao;
 import com.bridgelab.todo.user.model.User;
 import com.bridgelab.todo.user.util.JWT_Tokens;
@@ -151,6 +154,16 @@ public class UserServiceImpl implements IUserService {
 		User user2 = userDao.updateRecord(user);
 		return null;
 
+	}
+	
+@Transactional
+	@Override
+	public void saveImage(MultipartFile fileUpload, int userId) throws IOException {
+		
+		User user= userDao.getUserById(userId);
+		user.setImage(fileUpload.getBytes());
+		userDao.updateRecord(user);
+		
 	}
 
 }

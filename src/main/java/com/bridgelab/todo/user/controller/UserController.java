@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelab.todo.user.model.User;
 import com.bridgelab.todo.user.service.IUserService;
@@ -60,7 +62,7 @@ public class UserController {
 	UserService userResponse=new UserService();
 
 
-	@RequestMapping(value = "user/register", method = RequestMethod.POST)
+	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
 
 		if (Validator.validate(user.getUsername()) == true && Validator.validateEmail(user.getEmail()) == true
@@ -92,26 +94,30 @@ public class UserController {
 			System.out.println("token : "+token);
 
 			if (token != null) {
+				response.setHeader("Authorization", token);
 
+				System.out.println("token in user controller... :"+ token);
 				userResponse.setStatusCode(200);
-				userResponse.setMessage("Login successfull");
 				response.setHeader("Authorization", token);
 				return new ResponseEntity<UserService>(userResponse , HttpStatus.OK);
 
-			} else {
 
-				userResponse.setStatusCode(400);
+			} else {
+				userResponse.setStatusCode(409);
 				userResponse.setMessage("Login fail");
-				return new ResponseEntity<UserService>(userResponse, HttpStatus.OK);
+				return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
+
 			}
 
 		} catch (Exception e) {
-			return null;
+			System.out.println("exception thrown");
+			e.printStackTrace();
+			return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
 
 		}
 
 	}
-	@RequestMapping(value = "user/activateaccount/{token:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "activateaccount/{token:.+}", method = RequestMethod.GET)
 	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
 			HttpServletRequest request, HttpServletResponse response) {
 
@@ -120,20 +126,33 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/getuser/{userId}", method = RequestMethod.GET)
+	/*@RequestMapping(value = "getuser/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
+
+		User user = userService.getUserById(userId);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
+
+	}*/
+
+	@RequestMapping(value = "user/getuser", method = RequestMethod.GET)
+	public ResponseEntity<User> getUserById(HttpServletRequest request) {
+		int userId=(int) request.getAttribute("userId");
 		User user = userService.getUserById(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
 	}
 
-	@RequestMapping(value = "/getuserbyemail", method = RequestMethod.POST)
-	public User getUserByEmail(@RequestBody User user) {
-		User user1 = userService.getUserByEmail(user.getEmail());
-		return user1;
+	@RequestMapping(value = "user/getuserbyemail/{email}", method = RequestMethod.POST)
+	public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email,HttpServletRequest request) { 
+		int userId=(int) request.getAttribute("userId");
+		User user = userService.getUserByEmail(email);
+
+		return new ResponseEntity<User>(HttpStatus.OK);
+
 	}
 
-	@RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
+
+	@RequestMapping(value = "forgotpassword", method = RequestMethod.POST)
 	public ResponseEntity<String> forgotPassword(@RequestBody User user, HttpServletRequest request) {
 		String forgotPasswordURL = request.getRequestURL().toString().substring(0,
 				request.getRequestURL().lastIndexOf("/"));
@@ -151,5 +170,16 @@ public class UserController {
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 
 	}
+
+	@RequestMapping(value = "user/uploaduser",  method = RequestMethod.POST)
+	public ResponseEntity<String> handleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile fileUpload, @RequestParam int userId)
+			throws Exception {
+		System.out.println("file name -- "+fileUpload.getOriginalFilename());
+		userService.saveImage(fileUpload, userId);
+
+
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+
 
 }
