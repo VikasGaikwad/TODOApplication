@@ -4,6 +4,8 @@
 package com.bridgelab.todo.user.controller;
 
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bridgelab.todo.user.model.UrlProperties;
 import com.bridgelab.todo.user.model.User;
 import com.bridgelab.todo.user.service.IUserService;
 import com.bridgelab.todo.user.util.Validator;
@@ -58,6 +61,8 @@ import com.bridgelab.todo.user.util.Validator;
 public class UserController {
 	@Autowired
 	IUserService userService;
+	@Autowired
+	UrlProperties urlProperties;
 
 	UserService userResponse=new UserService();
 
@@ -160,7 +165,17 @@ public class UserController {
 		return new ResponseEntity<String>("link sent successfully", HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "user/resetPassword/{token:.+}", method = RequestMethod.POST)
+	/*@RequestMapping(value = "user/resetPassword/{token:.+}", method = RequestMethod.POST)
+	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
+
+		//User userobj = userService.getObjByUUID(token);
+		// userobj.setEmail(userobj.getEmail());
+		String newPassword=user.getPassword();
+		userService.resetPassword(token, request,newPassword);
+		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
+
+	}*/
+	@RequestMapping(value = "user/resetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
 
 		//User userobj = userService.getObjByUUID(token);
@@ -179,6 +194,27 @@ public class UserController {
 
 
 		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	/**
+	* <p>
+	* This is resetPasswordLink API is used redirect the request to front resetPassword view component
+	* </p>
+	* 
+	* @param jwtToken
+	* @param response
+	* @param request
+	* @throws IOException
+	*/
+	@RequestMapping(value = "user/resetPasswordLink/{token:.+}", method = RequestMethod.GET)
+	public void resetPasswordLink(@PathVariable("token") String token, HttpServletResponse response,
+	HttpServletRequest request) throws IOException {
+
+	
+	System.out.print("url for front end-->" + request.getHeader("origin"));
+	System.out.print("your fronENd url "+urlProperties.getFrontEndHost());
+	response.sendRedirect(urlProperties.getFrontEndHost()+"/resetpassword?token=" + token);
+
 	}
 
 

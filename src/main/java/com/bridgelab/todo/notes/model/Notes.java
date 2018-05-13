@@ -19,11 +19,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.bridgelab.todo.collaborator.model.Collaborator;
 import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.user.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mysql.jdbc.Blob;
 
 /**
@@ -67,6 +70,9 @@ public class Notes implements Serializable {
 	private String color;
 	@Transient
 	private String fullPath;
+	@Transient
+	private String collaboratorName;
+	private int ownerId;
 	/*
 	 * @Transient private Label label;
 	 */
@@ -90,6 +96,10 @@ public class Notes implements Serializable {
 			@JoinColumn(name = "labelId") })
 	private Set<Label> labels = new HashSet<Label>();
 
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="noteId")
+	private Set<Collaborator> collaborators;
 	public Notes() {
 
 	}
@@ -224,6 +234,30 @@ public class Notes implements Serializable {
 
 	public void setImage(byte[] image) {
 		this.image = image;
+	}
+
+	public String getCollaboratorName() {
+		return collaboratorName;
+	}
+
+	public void setCollaboratorName(String collaboratorName) {
+		this.collaboratorName = collaboratorName;
+	}
+
+	public Set<Collaborator> getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(Set<Collaborator> collaborators) {
+		this.collaborators = collaborators;
+	}
+
+	public int getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
 	}
 
 	

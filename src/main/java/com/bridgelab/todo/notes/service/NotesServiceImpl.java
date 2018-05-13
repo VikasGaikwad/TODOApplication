@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bridgelab.todo.collaborator.dao.ICollaboratorDao;
+import com.bridgelab.todo.collaborator.model.Collaborator;
 import com.bridgelab.todo.notes.dao.INotesDao;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.dao.IUserDao;
@@ -36,6 +38,8 @@ public class NotesServiceImpl implements INotesService {
 
 	@Autowired
 	IUserService userService;
+	@Autowired
+	ICollaboratorDao collaboratorDao;
 
 	/*
 	 * @Transactional - It is necessary that if you are interacting with the
@@ -99,14 +103,49 @@ public class NotesServiceImpl implements INotesService {
 	@Override
 	public List<NotesDTO> getAllNotesByUserId(long userId) {
 		List<Notes> notes = notesDao.getAllNotesByUserId(userId);
+		User user=userDao.getUserById(userId);
+		
+	List<Collaborator> collabs = collaboratorDao.getCollbySharedId(user);
+
+		for (Collaborator collaborator : collabs) {
+
+		Notes obj = collaborator.getNoteId();
+		obj.setCollaboratorName(collaborator.getOwnerId().getUsername());
+		notes.add(obj);
+
+		}
+
 		List<NotesDTO> responseDTO = new ArrayList<>();
-		for (Notes object : notes) {
+		
+		for (Notes object : notes) 
+		{
 			NotesDTO obj = new NotesDTO(object);
 			responseDTO.add(obj);
 		}
-		return responseDTO;
+		
+		
+	 return responseDTO;
 	}
-
+           
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/*--------------------------------------------------------*/
 
 	@Transactional

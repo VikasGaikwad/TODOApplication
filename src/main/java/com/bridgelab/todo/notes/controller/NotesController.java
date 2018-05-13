@@ -79,7 +79,8 @@ public class NotesController {
 		return new ResponseEntity<Notes>(notes, HttpStatus.OK);
 	}
 	/*------------------------------------------------------------------------------------*/
-
+    
+	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "user/readallnotes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> readAllNotesNotes(HttpServletRequest request, HttpServletResponse response) {
@@ -87,6 +88,9 @@ public class NotesController {
 		List<NotesDTO> notes = notesService.getAllNotesByUserId(userId);
 		return new ResponseEntity<List>(notes, HttpStatus.OK);
 	}
+	
+	
+	
 	/*------------------------------------------------------------------------------------*/
 
 	@RequestMapping(value = "user/upload",  method = RequestMethod.POST, headers= {"content-type=multipart/*"})

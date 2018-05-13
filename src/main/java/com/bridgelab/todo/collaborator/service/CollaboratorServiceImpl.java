@@ -12,7 +12,6 @@ import com.bridgelab.todo.notes.dao.INotesDao;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.user.dao.IUserDao;
 import com.bridgelab.todo.user.model.User;
-import com.bridgelab.todo.user.util.CollaboratorDTO;
 
 /**
  * @author bridgeit
@@ -45,17 +44,8 @@ collaboratorDao.addCollaborator(collaborator);
 
 }
 
-@Override
-public void saveCollaborator(CollaboratorDTO collaboratorDto, int userId) {
-	// TODO Auto-generated method stub
-	
-}
 
-@Override
-public boolean deleteCollaborator(CollaboratorDTO collaboratorDTO) {
-	// TODO Auto-generated method stub
-	return false;
-}
+
 
 @Override
 public void removeCollaborator(String sharedId, int noteId) {
@@ -64,6 +54,10 @@ public void removeCollaborator(String sharedId, int noteId) {
 	collaboratorDao.removeCollaborator( user, notes);
 	
 }
+
+
+
+
 
 /*@Transactional
 @Override

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.bridgelab.todo.collaborator.model.Collaborator;
+import com.bridgelab.todo.collaborator.model.CollaboratorDTO;
 import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.label.model.LabelRes;
 import com.bridgelab.todo.notes.model.Notes;
@@ -27,8 +28,9 @@ public class NotesDTO {
 	private Date reminder;
 	private String color;
 	private byte[] image;
+	private String collaboratorName;
 	private List<LabelRes> labels = new ArrayList<>();
-//	private List<CollaboratorDTO> collaborators = new ArrayList<>();
+	private List<CollaboratorDTO> collaborators = new ArrayList<>();
 
 	// private byte[] image;
 
@@ -45,9 +47,9 @@ public class NotesDTO {
 		for (Label label : object.getLabels()) {
 			labels.add(new LabelRes(label));
 		}
-//		for (Collaborator collaborator : object.get) {
-//			collaborators.add(new CollaboratorDTO(collaborator));
-//		}
+		for (Collaborator collaborator : object.getCollaborators()) {
+			collaborators.add(new CollaboratorDTO(collaborator));
+		}
 	}
 
 	public long getNoteId() {
@@ -132,13 +134,21 @@ public class NotesDTO {
 		this.image = image;
 	}
 
-//	public List<CollaboratorDTO> getCollaborators() {
-//		return collaborators;
-//	}
-//
-//	public void setCollaborators(List<CollaboratorDTO> collaborators) {
-//		this.collaborators = collaborators;
-//	}
+	public List<CollaboratorDTO> getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(List<CollaboratorDTO> collaborators) {
+		this.collaborators = collaborators;
+	}
+
+	public String getCollaboratorName() {
+		return collaboratorName;
+	}
+
+	public void setCollaboratorName(String collaboratorName) {
+		this.collaboratorName = collaboratorName;
+	}
 
 	
 }

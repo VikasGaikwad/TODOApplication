@@ -3,6 +3,8 @@
  */
 package com.bridgelab.todo.collaborator.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -60,6 +62,16 @@ public class CollaboratorDaoImpl implements ICollaboratorDao {
 		query.executeUpdate();
 		System.out.println("record deleted... ");
 	}
+	@Override
+	public List<Collaborator> getCollbySharedId(User sharedUser) {
+	Session session = sessionFactory.getCurrentSession();
+	String hql = "from Collaborator where sharedId = :sharedId";
+	Query query = session.createQuery(hql);
+	query.setParameter("sharedId", sharedUser);
+	List<Collaborator> coll = query.list();
+	return coll;
+	}
 
+	
 
 }
