@@ -41,16 +41,18 @@
 				<value>com.bridgelab.todo.collaborator.model.Collaborator</value>
 			</list>
 		</property>
+		
+		
 		<property name="hibernateProperties">
 			<props>
-
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.show_sql">true</prop>
-
 			</props>
-		</property>
+		</property>		
 	</bean>
+	
+	
 
 	<!-- Transaction Manager -->
 	<bean id="transactionManager"
@@ -80,6 +82,8 @@
 	<bean id="mailService" class="com.bridgelab.todo.user.util.Mail">
 		<property name="mailSending" ref="mailSending"></property>
 	</bean>
+	
+	
 	<bean id="encryptEncoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
@@ -93,9 +97,11 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
-<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <property name="maxUploadSize" value="100000"/>
-</bean>
+	</bean>
+	
 
 	<bean id="userDao" class="com.bridgelab.todo.user.dao.UserDaoImpl"></bean>
 	<bean id="userService" class="com.bridgelab.todo.user.service.UserServiceImpl"></bean>
@@ -107,9 +113,10 @@
 	<bean id="collaboratorDao" class="com.bridgelab.todo.collaborator.dao.CollaboratorDaoImpl"></bean>
 	<bean id="collaboratorService" class="com.bridgelab.todo.collaborator.service.CollaboratorServiceImpl"></bean>
 
-<bean id="urlProperties" class="com.bridgelab.todo.user.model.UrlProperties">
-<property name="frontEndHost" value="${frontEndHost}"></property>
-</bean>
+
+	<bean id="urlProperties" class="com.bridgelab.todo.user.model.UrlProperties">
+	<property name="frontEndHost" value="${frontEndHost}"></property>
+	</bean>
 
 
 </beans>

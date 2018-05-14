@@ -29,7 +29,7 @@ public interface IUserService {
 
 	 void forgotPassword(User user, String forgotPasswordUrl);
 
-	 User getObjByUUID(String randomUUID);
+//	 User getObjByUUID(String randomUUID);
 
 	 String resetPassword(String token, HttpServletRequest request, String newPassword);
 

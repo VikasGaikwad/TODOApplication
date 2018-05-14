@@ -64,13 +64,8 @@ public class NotesDaoImpl implements INotesDao {
 	@Override
 	public int createNote(Notes notes) {
 
-		System.out.println(notes.getTitle() + "......" + notes.getTrash());
-		/* getCurrentSession()-Obtains the current session. */
+		System.out.println(notes.getTitle() + "......" + notes.getTrash());		
 		session = sessionFactory.getCurrentSession();
-		/*
-		 * Persist the given transient instance, first assigning a generated identifier.
-		 */
-
 		long notedata = (long) session.save(notes);
 		return (int) notedata;
 
@@ -78,7 +73,7 @@ public class NotesDaoImpl implements INotesDao {
 	/*-------------------------------------------------------------------------*/
 
 	@Override
-	public void updateNotes(Notes notes, long noteId) {
+	public void updateNotes(Notes notes, long UserId) {
 
 		session = sessionFactory.getCurrentSession();
 

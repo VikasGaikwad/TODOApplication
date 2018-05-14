@@ -39,13 +39,12 @@ public class NotesController {
 
 	/*------------------------------------------------------------------------------------*/
 	@RequestMapping(value = "user/createnote", method = RequestMethod.POST)
-	public ResponseEntity<?> createNote(@RequestBody Notes notes, HttpServletRequest request,
+		public ResponseEntity<?> createNote(@RequestBody Notes notes, HttpServletRequest request,
 			HttpServletResponse response) {
 		int userId = JWT_Tokens.verifyToken(request.getHeader("Authorization"));
-		if(userId!=0) {
-			
-		
-		notesService.createNote(notes, userId);
+	
+		if(userId!=0) {		
+	notesService.createNote(notes, userId);
 		return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		else {
@@ -83,7 +82,7 @@ public class NotesController {
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "user/readallnotes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> readAllNotesNotes(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<?> readAllNotes(HttpServletRequest request, HttpServletResponse response) {
 		int userId = (int) request.getAttribute("userId");
 		List<NotesDTO> notes = notesService.getAllNotesByUserId(userId);
 		return new ResponseEntity<List>(notes, HttpStatus.OK);

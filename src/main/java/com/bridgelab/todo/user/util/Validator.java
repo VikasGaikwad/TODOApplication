@@ -15,7 +15,7 @@ public class Validator {
 	private static Pattern pattern;
 	private static Matcher matcher;
 
-	private static final String USERNAME_PATTERN = "^[a-z0-9_-]{3,15}$";
+	private static final String USERNAME_PATTERN = "^[a-zA-Z0-9_-]{3,15}$";
 
 
 	private static final String EMAIL_PATTERN = 

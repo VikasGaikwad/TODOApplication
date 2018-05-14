@@ -53,7 +53,6 @@ public class NotesServiceImpl implements INotesService {
 
 		Date createdDate = new Date();
 		notes.setCreatedDate(createdDate);
-
 		User user = new User();
 		user.setUserId(id);
 		notes.setUser(user);
@@ -64,12 +63,12 @@ public class NotesServiceImpl implements INotesService {
 
 	@Transactional
 	@Override
-	public void updateNotes(Notes notes, long noteId) {
+	public void updateNotes(Notes notes, long userId) {
 
-		User user = userService.getUserById(noteId);
+		User user = userService.getUserById(userId);
 		/* notes.setCreatedDate(notes.getCreatedDate()); */
 		notes.setUser(user);
-		notesDao.updateNotes(notes, noteId);
+		notesDao.updateNotes(notes, userId);
 	}
 
 	/*--------------------------------------------------------*/

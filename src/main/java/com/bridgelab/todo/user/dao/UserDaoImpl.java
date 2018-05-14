@@ -22,63 +22,43 @@ public class UserDaoImpl implements IUserDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	//******************************************************************************************************//
+
 	public int registerUser(User user) {		
 			session = sessionFactory.getCurrentSession();
 			long id = (long) session.save(user);
 			return (int) id;			
 		}
-		
 
 	
+	//******************************************************************************************************//
 
-	/*public int registerUser(User user) {
-
-		try {
-			session = sessionFactory.openSession();
-			long id = (long) session.save(user);
-
-			return (int) id;
-		} catch (Exception e) {
-			
-		} finally {
-			session.close();
-		}
-		return 0;
-
-	}*/
+	
+	/*uniqueResult()-
+	 * Convenience method to return a single instance that matches the query, or
+	 * null if the query returns no results.
+	 */
 
 	@Override
 	public User loginUser(User user) {
-
-		session = sessionFactory.openSession();
-
-//
+		session = sessionFactory.getCurrentSession();//
 		try {
 			Criteria criteria = session.createCriteria(User.class);
 			Criterion email_id = Restrictions.eq("email", user.getEmail());
-
-			Criterion password1 = Restrictions.eq("password", user.getPassword());
-
-			Criterion criterian = Restrictions.and(email_id, password1);
-			criteria.add(criterian);
-			/*uniqueResult()-
-			 * Convenience method to return a single instance that matches the query, or
-			 * null if the query returns no results.
-			 */
+			Criterion password = Restrictions.eq("password", user.getPassword());
+			Criterion criterian = Restrictions.and(email_id, password);
+			criteria.add(criterian);			
 			User userObj = (User) criteria.uniqueResult();
-		//	System.out.println("login successfull");
-
 			return userObj;
-
 		} catch (Exception e) {
 			System.out.println("login failed");
-
-		} finally {
-			session.close();
-		}
-		return null;
-
+		}		
+			return null;
 	}
+	
+	
+	//******************************************************************************************************//
 
 	@Override
 	public User getUserById(long userId) {
@@ -114,7 +94,7 @@ public class UserDaoImpl implements IUserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("randomUUID", randomUUID));
 		User user3 = (User) criteria.uniqueResult();
-		System.out.println("userdaoimpl..........." + user3.getRandomUUID());
+//		System.out.println("userdaoimpl..........." + user3.getRandomUUID());
 		return user3;
 
 	}
@@ -143,6 +123,9 @@ public class UserDaoImpl implements IUserDao {
 		//System.out.println("email id " + user.getEmail());
 		return user;
 	}
+	
+	
+	//******************************************************************************************************//
 
 	@Override
 	public User updateRecord(User user) {
@@ -153,6 +136,9 @@ public class UserDaoImpl implements IUserDao {
 		return user;
 
 	}
+	
+	
+	//******************************************************************************************************//
 
 	@Override
 	public String getUserPassword() {

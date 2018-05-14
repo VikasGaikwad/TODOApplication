@@ -16,7 +16,7 @@ public interface INotesDao {
 
 	int createNote(Notes notes);
 	
-	void updateNotes(Notes notes, long noteId);
+	void updateNotes(Notes notes, long userId);
 
 	
 

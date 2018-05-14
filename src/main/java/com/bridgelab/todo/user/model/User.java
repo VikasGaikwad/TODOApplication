@@ -54,9 +54,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="user")
 	private Set<Label> label;
 	
-	@Column
-	private String randomUUID;
-	
+//	@Column
+//	private String randomUUID;
+//	
 	@Column
 	private boolean status;
 	
@@ -68,19 +68,6 @@ public class User implements Serializable {
 
 	}
 
-	
-
-//	public User(long userId, String username, String email, String password, Set<Notes> notes, String randomUUID,
-//			boolean status) {
-//		
-//		this.userId = userId;
-//		this.username = username;
-//		this.email = email;
-//		this.password = password;
-//		this.notes = notes;
-//		this.randomUUID = randomUUID;
-//		this.status = status;
-//	}
 
 
 
@@ -116,14 +103,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public String getRandomUUID() {
+	/*public String getRandomUUID() {
 		return randomUUID;
 	}
 
 	public void setRandomUUID(String randomUUID) {
 		this.randomUUID = randomUUID;
 	}
-
+*/
 	public boolean isStatus() {
 		return status;
 	}

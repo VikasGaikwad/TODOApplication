@@ -47,7 +47,7 @@ public class LabelController {
 	
 	@RequestMapping(value = "user/readLabel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Label>> readLabel(HttpServletRequest request) {
-		System.out.println("inside label controller");
+		
 		int id = (int) request.getAttribute("userId");
 		if (id != 0) {
 			List<Label> labelList = labelService.readLabel(id);
@@ -64,7 +64,7 @@ public class LabelController {
 		
 		System.out.println("label id ="+labelId);
 		try {
-			labelService.deleteLabel(labelId,labelId);
+			labelService.deleteLabel(labelId,id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -80,26 +80,17 @@ public class LabelController {
 	public ResponseEntity<?> addLabelOnNote(@PathVariable("noteId") int noteId, @PathVariable("labelId") int labelId,
 			@PathVariable("checked") String checked){
 		
-		boolean status = Boolean.valueOf(checked);
-		System.out.println("status---"+status);
+		boolean status = Boolean.valueOf(checked);		
 		if(status) {
-			System.out.println("note id controller- title -"+noteId);
-			System.out.println("label id controller- name -"+labelId);
-
-			labelService.addLabelOnNote( labelId, noteId);
-			
-			/*return new ResponseEntity<>(HttpStatus.OK);*/
-		}else if(!status) {
-			
-			labelService.deleteLabelFromNote(labelId, noteId);
-			/*return new ResponseEntity<>(HttpStatus.OK);*/
+			labelService.addLabelOnNote( labelId, noteId);			
+		}else if(!status) {			
+			labelService.deleteLabelFromNote(labelId, noteId);			
 		}
-	/*	return new ResponseEntity<>(HttpStatus.CONFLICT);*/
-		return null;
-		
-			
-		
+		return null;		
 	}
+	
+	//-------------------------------------------------------------------------//
+
 	
 	@RequestMapping(value = "user/updatelabel", method = RequestMethod.POST)
 	public ResponseEntity<String> updateLabel(@RequestBody Label label, HttpServletRequest request) {

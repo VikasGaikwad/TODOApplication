@@ -66,6 +66,9 @@ public class UserController {
 
 	UserService userResponse=new UserService();
 
+	
+	//******************************************************************************************************//
+
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser(@RequestBody User user, HttpServletRequest request) {
@@ -76,61 +79,56 @@ public class UserController {
 			try {
 				String emailVerificationUrl = request.getRequestURL().toString().substring(0,
 						request.getRequestURL().lastIndexOf("/"));
-
 				userService.registerUser(user, emailVerificationUrl);
-
 				return new ResponseEntity<String>("registered successfully", HttpStatus.OK);
-
 			} catch (Exception e) {
 				return new ResponseEntity<String>("email/password/name--convention error", HttpStatus.CONFLICT);
-
 			}
-
 		}
-
 		return new ResponseEntity<String>("something went wrong", HttpStatus.BAD_REQUEST);
 	}
+	
+	//******************************************************************************************************//
+	
+	@RequestMapping(value = "activateaccount/{token:.+}", method = RequestMethod.GET)
+		public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
+			HttpServletRequest request, HttpServletResponse response) {		
+			userService.activateAccount(token, request);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	//******************************************************************************************************//
+
+
 	@RequestMapping(value = "login", method = RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> userLog(@RequestBody User user, HttpServletRequest request,
 			HttpServletResponse response) {
-		try {
+			try {
 
-			String token = userService.loginUser(user);
-			System.out.println("token : "+token);
+					String jwtToken = userService.loginUser(user);
+					if (jwtToken != null) {
+							response.setHeader("Authorization", jwtToken);							
+							userResponse.setStatusCode(200);
+							return new ResponseEntity<UserService>(userResponse , HttpStatus.OK);
+					} else {
+							userResponse.setStatusCode(409);
+							userResponse.setMessage("Login fail");
+							return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
 
-			if (token != null) {
-				response.setHeader("Authorization", token);
+					}
 
-				System.out.println("token in user controller... :"+ token);
-				userResponse.setStatusCode(200);
-				response.setHeader("Authorization", token);
-				return new ResponseEntity<UserService>(userResponse , HttpStatus.OK);
-
-
-			} else {
-				userResponse.setStatusCode(409);
-				userResponse.setMessage("Login fail");
-				return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
-
-			}
-
-		} catch (Exception e) {
-			System.out.println("exception thrown");
-			e.printStackTrace();
-			return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
+			} catch (Exception e) {
+					System.out.println("exception thrown");
+					e.printStackTrace();
+					return new ResponseEntity<UserService>(userResponse, HttpStatus.CONFLICT);
 
 		}
 
 	}
-	@RequestMapping(value = "activateaccount/{token:.+}", method = RequestMethod.GET)
-	public ResponseEntity<?> activateAccount(@PathVariable("token") String token,
-			HttpServletRequest request, HttpServletResponse response) {
+	
+	//******************************************************************************************************//
 
-		System.out.println("inside controller of activate------"+token);
-		userService.activateAccount(token, request);
-		return new ResponseEntity<Void>(HttpStatus.OK);
-	}
-
+	
 	/*@RequestMapping(value = "getuser/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(@PathVariable("userId") long userId) {
 
@@ -138,6 +136,9 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
 	}*/
+	
+	
+	//******************************************************************************************************//
 
 	@RequestMapping(value = "user/getuser", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserById(HttpServletRequest request) {
@@ -146,6 +147,8 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 
 	}
+	//******************************************************************************************************//
+
 
 	@RequestMapping(value = "user/getuserbyemail/{email}", method = RequestMethod.POST)
 	public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email,HttpServletRequest request) { 
@@ -156,6 +159,7 @@ public class UserController {
 
 	}
 
+	//******************************************************************************************************//
 
 	@RequestMapping(value = "forgotpassword", method = RequestMethod.POST)
 	public ResponseEntity<String> forgotPassword(@RequestBody User user, HttpServletRequest request) {
@@ -164,6 +168,32 @@ public class UserController {
 		userService.forgotPassword(user, forgotPasswordURL);
 		return new ResponseEntity<String>("link sent successfully", HttpStatus.OK);
 	}
+	
+	//******************************************************************************************************//
+
+
+	/**
+	 * <p>
+	 * This is resetPasswordLink API is used redirect the request to front resetPassword view component
+	 * </p>
+	 * 
+	 * @param jwtToken
+	 * @param response
+	 * @param request
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "user/resetPasswordLink/{token:.+}", method = RequestMethod.GET)
+	public void resetPasswordLink(@PathVariable("token") String token, HttpServletResponse response,
+			HttpServletRequest request) throws IOException {
+
+
+		System.out.print("url for front end-->" + request.getHeader("origin"));
+		System.out.print("your fronENd url "+urlProperties.getFrontEndHost());
+		response.sendRedirect(urlProperties.getFrontEndHost()+"/resetpassword?token=" + token);
+
+	}
+
+	//******************************************************************************************************//
 
 	/*@RequestMapping(value = "user/resetPassword/{token:.+}", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
@@ -175,6 +205,9 @@ public class UserController {
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 
 	}*/
+	
+	//******************************************************************************************************//
+
 	@RequestMapping(value = "user/resetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
 
@@ -185,6 +218,9 @@ public class UserController {
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);
 
 	}
+	
+	//******************************************************************************************************//
+
 
 	@RequestMapping(value = "user/uploaduser",  method = RequestMethod.POST)
 	public ResponseEntity<String> handleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile fileUpload, @RequestParam int userId)
@@ -194,27 +230,6 @@ public class UserController {
 
 
 		return new ResponseEntity<String>(HttpStatus.OK);
-	}
-	
-	/**
-	* <p>
-	* This is resetPasswordLink API is used redirect the request to front resetPassword view component
-	* </p>
-	* 
-	* @param jwtToken
-	* @param response
-	* @param request
-	* @throws IOException
-	*/
-	@RequestMapping(value = "user/resetPasswordLink/{token:.+}", method = RequestMethod.GET)
-	public void resetPasswordLink(@PathVariable("token") String token, HttpServletResponse response,
-	HttpServletRequest request) throws IOException {
-
-	
-	System.out.print("url for front end-->" + request.getHeader("origin"));
-	System.out.print("your fronENd url "+urlProperties.getFrontEndHost());
-	response.sendRedirect(urlProperties.getFrontEndHost()+"/resetpassword?token=" + token);
-
 	}
 
 

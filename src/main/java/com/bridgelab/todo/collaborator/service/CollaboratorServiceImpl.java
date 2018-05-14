@@ -50,36 +50,12 @@ collaboratorDao.addCollaborator(collaborator);
 @Override
 public void removeCollaborator(String sharedId, int noteId) {
 	User user = userDao.getUserByEmail(sharedId);
-	Notes notes = notesDao.getNoteById(noteId);
-	collaboratorDao.removeCollaborator( user, notes);
+	Notes note = notesDao.getNoteById(noteId);
+	collaboratorDao.removeCollaborator( user, note);
 	
 }
 
 
 
 
-
-/*@Transactional
-@Override
-public void saveCollaborator(CollaboratorDTO collaboratorDto, int userId) {
-	Collaborator collaborator=new Collaborator();
-	collaborator.setOwnerId(userDao.getUserById(userId));
-	//User user = userDao.getUserById(userId);	
-	collaborator.setSharedId(userDao.getUserByEmail(collaboratorDto.getEmail()));
-	collaborator.setNoteId(notesDao.getNoteById(collaboratorDto.getNoteId()));
-	collaboratorDao.saveCollaborator(collaborator);
-	
-}
-@Transactional
-@Override
-public boolean deleteCollaborator(CollaboratorDTO collaboratorDTO) {
-	Collaborator collaborator=new Collaborator();
-	Notes note=collaborator.getNoteId();
-	User shareduser=collaborator.getSharedId();
-	collaboratorDao.deleteCollaborator(note,shareduser);
-	return true;
-	
-	
-}*/
-	
 }

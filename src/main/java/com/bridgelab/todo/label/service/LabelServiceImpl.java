@@ -86,19 +86,10 @@ public class LabelServiceImpl implements ILabelService {
 	@Transactional
 	@Override
 	public void addLabelOnNote(int labelId, int noteId) {
-
-
-
-		Notes note=notesService.getNoteById(noteId);
-
-		System.out.println("labelservice impl note id"+note.getNoteId());
-		System.out.println("label service impl- title -"+note.getNoteId());
-		Label label=labelDao.getLabelById(labelId);
-		System.out.println("label service impl- name -"+label.getLabelId());
+		Notes note=notesService.getNoteById(noteId);	
+		Label label=labelDao.getLabelById(labelId);	
 		note.getLabels().add(label);
-
 		labelDao.addLabelOnNote(note);
-
 	}
 	@Transactional
 	@Override

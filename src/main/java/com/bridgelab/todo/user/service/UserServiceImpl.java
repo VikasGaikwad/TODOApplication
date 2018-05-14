@@ -44,39 +44,46 @@ public class UserServiceImpl implements IUserService {
 	 * <b>{@link Transactional @Transactional}</b> Transactional annotation provides
 	 * the application the ability to declaratively control transaction boundaries.
 	 */
+	
+	//******************************************************************************************************//
+
 	@Transactional
 	public void registerUser(User user, String emailVerificationUrl) {
 
 		String hashCode = passwordEncoder.encode(user.getPassword());
 		user.setPassword(hashCode);
-		String randomUUID = UUID.randomUUID().toString();
-		user.setRandomUUID(randomUUID);
+//		String randomUUID = UUID.randomUUID().toString();
+//		user.setRandomUUID(randomUUID);
 		int id = userDao.registerUser(user);
-		int token_id=(int) user.getUserId();
-		System.out.println("registered user id----"+user.getUserId());
-		String token=JWT_Tokens.createToken(token_id);
-		System.out.println("registration token : "+token);
+		int token_id=(int) user.getUserId();		
+		String jwtToken=JWT_Tokens.createToken(token_id);
+		System.out.println("------jwt token generated during registration------ \n"+jwtToken);
 		if (id > 0) {			
 			String to = user.getEmail();
-			String message = emailVerificationUrl + "/activateaccount/" + token;
+			String message = emailVerificationUrl + "/activateaccount/" + jwtToken;
 			mailService.sendMail(to,message);
 		}
 
 
 	}
-
+	
+	
+	//******************************************************************************************************//
+	@Transactional
 	@Override
 	public String loginUser(User user) {
-		String token = null;
-		User user3 = userDao.loginUser(user);
-		System.out.println("userId :- " + user3.getUserId());
-		if (user3 != null && user3.isStatus() == true) {
-			int id = (int) user3.getUserId();
-			token = JWT_Tokens.createToken(id);
-			System.out.println("generated token : - " + token);
+		String jwtToken = null;
+		User verifiedUser = userDao.loginUser(user);
+		if (verifiedUser != null && verifiedUser.isStatus() == true) {
+			int id = (int) verifiedUser.getUserId();
+			jwtToken = JWT_Tokens.createToken(id);
+			System.out.println("generated token : - " + jwtToken);
 		}
-		return token;
+		return jwtToken;
 	}
+
+	//******************************************************************************************************//
+
 
 	@Transactional
 	public User getUserById(long userId) {
@@ -95,6 +102,7 @@ public class UserServiceImpl implements IUserService {
 
 		return userDao.getUserByEmail(email);
 	}
+	
 	@Transactional
 	@Override
 	public void forgotPassword(User user, String forgotPasswordUrl) {
@@ -103,32 +111,30 @@ public class UserServiceImpl implements IUserService {
 
 		if (user != null) {
 
-			String randomUUID = user.getRandomUUID();
+		//	String randomUUID = user.getRandomUUID();
 			int id = (int) user.getUserId();
 			String token = JWT_Tokens.createToken(id);
-			System.out.println("generated token for forgot password : - " + token);
+			System.out.println("---------generated token for forgot password : ---------- \n" + token);
 			String to = user.getEmail();
 			String message = forgotPasswordUrl + "user/resetPasswordLink/" + token;
 			mailService.sendMail(to,message);
 		}
 	}
 
-	@Transactional
+	/*@Transactional
 	public User getObjByUUID(String randomUUID) {
 		System.out.println("inside userserviceimpl" + randomUUID);
 		return userDao.getObjByUUID(randomUUID);
 
-	}
+	}*/
 @Transactional
 	@Override
 	public String resetPassword(String token, HttpServletRequest request,String newPassword) {
-		System.out.println("inside activate account token"+token);
-		int id=JWT_Tokens.verifyToken(token);
-		System.out.println("id+++++++++++"+id);
+		
+		int id=JWT_Tokens.verifyToken(token);		
 		User user = userDao.getUserById(id);
 		user.setPassword(newPassword);
-		System.out.println("inside activateAccount====\n"+user.getEmail()+"\npassword===="+user.getPassword());
-		User user2 = userDao.updateRecord(user);
+		userDao.updateRecord(user);
 		return null;
 				
 		
@@ -141,21 +147,21 @@ public class UserServiceImpl implements IUserService {
 	 * resources (Hibernate Session) will be shared for the entire specified scope.
 	 */
 
+
+//******************************************************************************************************//
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public String activateAccount(String token, HttpServletRequest request) {
-		System.out.println("inside activate account token"+token);
-		int id=JWT_Tokens.verifyToken(token);
-		System.out.println("id+++++++++++"+id);
+	public String activateAccount(String token, HttpServletRequest request) {	
+		int id=JWT_Tokens.verifyToken(token);		
 		User user = userDao.getUserById(id);
-		System.out.println("inside activateAccount====\n"+user.getEmail()+"\npassword===="+user.getPassword());
-		user.setStatus(true);
-		@SuppressWarnings("unused")
+		user.setStatus(true);		
 		User user2 = userDao.updateRecord(user);
 		return null;
-
 	}
 	
+	//******************************************************************************************************//
+
 @Transactional
 	@Override
 	public void saveImage(MultipartFile fileUpload, int userId) throws IOException {

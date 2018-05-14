@@ -27,11 +27,8 @@ public class CollaboratorController {
 	
 	
 	@RequestMapping(value = "user/addcollaborator", method = RequestMethod.POST)
-	public ResponseEntity<Void> createCollaborator(@RequestParam String sharedId, @RequestParam int noteId,HttpServletRequest request) {
-
-	System.out.println("Inside add collaborator");
-	int userId = (int) request.getAttribute("userId");
-	
+	public ResponseEntity<Void> createCollaborator(@RequestParam String sharedId, @RequestParam int noteId,HttpServletRequest request) {	
+	int userId = (int) request.getAttribute("userId");	
 	try {
 	collaboratorService.addCollaborator(sharedId, noteId, userId);
 	return new ResponseEntity<Void>(HttpStatus.OK);
@@ -57,22 +54,6 @@ public class CollaboratorController {
 	
 	
 
-	/*@RequestMapping(value = "user/savecollaborator", method = RequestMethod.POST)
-	public ResponseEntity<?> saveCollaborator(@RequestBody CollaboratorDTO collaboratorDTO, HttpServletRequest request,
-			HttpServletResponse response) {
-		int userId = (int) request.getAttribute("userId");
-		collaboratorService.saveCollaborator(collaboratorDTO, userId);
-		response.setStatus(200);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-
-	}
-
-	@RequestMapping(value = "user/deletecollaborator", method = RequestMethod.POST)
-	public ResponseEntity<?> deleteCollaborator(@RequestBody CollaboratorDTO collaboratorDTO,
-			HttpServletRequest request) {
-		int userId = (int) request.getAttribute("userId");
-		collaboratorService.deleteCollaborator(collaboratorDTO);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}*/
+	
 
 }

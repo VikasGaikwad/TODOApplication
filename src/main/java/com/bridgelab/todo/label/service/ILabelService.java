@@ -18,7 +18,7 @@ public interface ILabelService {
 	boolean isLabelPresent(String label);
 	List<Label> readLabel(int id);
 	boolean deleteLabel(int labelId, int id);
-	public void addLabelOnNote(int labelId, int noteId);	
+	 void addLabelOnNote(int labelId, int noteId);	
 	void deleteLabelFromNote(int labelId, int noteId);
 	void updateLabel(Label label, int userId);
 	
