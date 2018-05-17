@@ -101,10 +101,12 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public List<NotesDTO> getAllNotesByUserId(long userId) {
-		List<Notes> notes = notesDao.getAllNotesByUserId(userId);
-		User user=userDao.getUserById(userId);
 		
-	List<Collaborator> collabs = collaboratorDao.getCollbySharedId(user);
+		
+		User user=userDao.getUserById(userId);
+		List<Notes> notes = notesDao.getAllNotesByUserId(userId);
+		
+		List<Collaborator> collabs = collaboratorDao.getCollbySharedId(user);
 
 		for (Collaborator collaborator : collabs) {
 
