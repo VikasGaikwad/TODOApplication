@@ -44,6 +44,7 @@ public class NotesDTO {
 		this.reminder = object.getReminder();
 		this.color = object.getColor();
 		this.image=object.getImage();
+		this.collaboratorName = object.getCollaboratorName();
 		for (Label label : object.getLabels()) {
 			labels.add(new LabelRes(label));
 		}

@@ -101,52 +101,28 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public List<NotesDTO> getAllNotesByUserId(long userId) {
-		
-		
-		User user=userDao.getUserById(userId);
+
+		User user = userDao.getUserById(userId);
 		List<Notes> notes = notesDao.getAllNotesByUserId(userId);
-		
+
 		List<Collaborator> collabs = collaboratorDao.getCollbySharedId(user);
 
 		for (Collaborator collaborator : collabs) {
-
-		Notes obj = collaborator.getNoteId();
-		obj.setCollaboratorName(collaborator.getOwnerId().getUsername());
-		notes.add(obj);
-
+			Notes obj = collaborator.getNoteId();
+			obj.setCollaboratorName(collaborator.getOwnerId().getUsername());
+			notes.add(obj);
 		}
 
 		List<NotesDTO> responseDTO = new ArrayList<>();
-		
-		for (Notes object : notes) 
-		{
+
+		for (Notes object : notes) {
 			NotesDTO obj = new NotesDTO(object);
 			responseDTO.add(obj);
 		}
-		
-		
-	 return responseDTO;
+
+		return responseDTO;
 	}
-           
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/*--------------------------------------------------------*/
 
 	@Transactional
@@ -160,20 +136,17 @@ public class NotesServiceImpl implements INotesService {
 
 	@Override
 	public void downloadImage(int noteId) {
-		//Notes note = notesDao.getNoteById(noteId);
+		// Notes note = notesDao.getNoteById(noteId);
 		notesDao.downloadImage(noteId);
-		
+
 	}
 
 	@Override
 	public void deleteImage(int noteId) {
 		notesDao.deleteImage(noteId);
-		
+
 	}
 
-	
-	
 	/*--------------------------------------------------------*/
-
 
 }
