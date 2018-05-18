@@ -116,7 +116,7 @@ public class UserServiceImpl implements IUserService {
 			String token = JWT_Tokens.createToken(id);
 			System.out.println("---------generated token for forgot password : ---------- \n" + token);
 			String to = user.getEmail();
-			String message = forgotPasswordUrl + "user/resetPasswordLink/" + token;
+			String message = forgotPasswordUrl + "/resetPasswordLink/" + token;
 			mailService.sendMail(to,message);
 		}
 	}

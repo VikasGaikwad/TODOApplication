@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelab.todo.label.dao.ILabelDao;
 import com.bridgelab.todo.label.model.Label;
+import com.bridgelab.todo.notes.dao.INotesDao;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.notes.service.INotesService;
 import com.bridgelab.todo.user.model.User;
@@ -32,7 +33,8 @@ public class LabelServiceImpl implements ILabelService {
 	@Autowired
 	INotesService notesService;
 
-
+@Autowired
+INotesDao notesDao;
 
 	@Transactional
 	@Override
@@ -69,8 +71,10 @@ public class LabelServiceImpl implements ILabelService {
 
 	@Transactional
 	@Override
-	public boolean deleteLabel(int labelId, int id) {
-		int row = labelDao.deleteLabels(labelId, id);
+	public boolean deleteLabel(int labelId) {
+		int row = labelDao.deleteLabels(labelId);
+	//	@SuppressWarnings("unused")
+	//	Notes note = notesService.getNoteById(noteId);
 		if (row != 0) {
 			return true;
 		}
@@ -80,7 +84,15 @@ public class LabelServiceImpl implements ILabelService {
 	@Transactional
 	@Override
 	public void deleteLabelFromNote(int labelId, int noteId) {
-		labelDao.deleteLabelFromNotes(labelId, noteId);
+		Notes note = notesService.getNoteById(noteId);
+		for (Label labelObj : note.getLabels()) {
+			if(labelObj.getLabelId() == labelId) {
+				note.getLabels().remove(labelObj);
+				break;
+			}
+			
+		}
+		notesDao.updateNotes(note, noteId);
 	}
 
 	@Transactional

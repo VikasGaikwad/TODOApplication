@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgelab.todo.label.model.Label;
 import com.bridgelab.todo.label.service.ILabelService;
 import com.bridgelab.todo.notes.model.Notes;
+import com.bridgelab.todo.notes.service.INotesService;
 
 /**
  * @author bridgeit
@@ -32,6 +33,8 @@ public class LabelController {
 
 	@Autowired
 	ILabelService labelService;
+	@Autowired
+	INotesService noteService;
 
 	// --------------------------------------------------------------------- //
 
@@ -58,13 +61,28 @@ public class LabelController {
 	}
 	// ----------------------------------------------------------------------- //
 
+	@SuppressWarnings("unused")
 	@RequestMapping(value="user/deletelabel/{labelId}", method=RequestMethod.DELETE)
-	public ResponseEntity<?> deletelabel(@PathVariable("labelId") int labelId,HttpServletRequest request){
-		int id=(int) request.getAttribute("userId");
-		
-		System.out.println("label id ="+labelId);
+	public ResponseEntity<?> deletelabel(@PathVariable("labelId") int labelId,
+			HttpServletRequest request){
 		try {
-			labelService.deleteLabel(labelId,id);
+		//	Notes note = noteService.getNoteById(noteId);
+			labelService.deleteLabel(labelId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+
+
+		
+	}
+	
+	
+	@RequestMapping(value="user/deletelabelonnote/{labelId}/{noteId}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deletelabel(@PathVariable("labelId") int labelId, @PathVariable("noteId") int noteId,
+			HttpServletRequest request){
+		try {
+			labelService.deleteLabelFromNote(labelId, noteId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);

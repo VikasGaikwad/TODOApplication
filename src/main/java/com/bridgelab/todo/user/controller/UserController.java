@@ -182,13 +182,13 @@ public class UserController {
 	 * @param request
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "user/resetPasswordLink/{token:.+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/resetPasswordLink/{token:.+}", method = RequestMethod.GET)
 	public void resetPasswordLink(@PathVariable("token") String token, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 
 
 		System.out.print("url for front end-->" + request.getHeader("origin"));
-		System.out.print("your fronENd url "+urlProperties.getFrontEndHost());
+		System.out.print("your fronend url "+urlProperties.getFrontEndHost());
 		response.sendRedirect(urlProperties.getFrontEndHost()+"/resetpassword?token=" + token);
 
 	}
@@ -208,11 +208,8 @@ public class UserController {
 	
 	//******************************************************************************************************//
 
-	@RequestMapping(value = "user/resetPassword", method = RequestMethod.POST)
-	public ResponseEntity<?> resetPassword(@RequestBody User user, @PathVariable("token") String token, HttpServletRequest request) {
-
-		//User userobj = userService.getObjByUUID(token);
-		// userobj.setEmail(userobj.getEmail());
+	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+	public ResponseEntity<?> resetPassword(@RequestBody User user, @RequestParam("token") String token, HttpServletRequest request) {
 		String newPassword=user.getPassword();
 		userService.resetPassword(token, request,newPassword);
 		return new ResponseEntity<String>("password reset successfully...", HttpStatus.OK);

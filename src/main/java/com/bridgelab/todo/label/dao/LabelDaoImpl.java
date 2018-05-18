@@ -55,7 +55,7 @@ public class LabelDaoImpl implements ILabelDao{
 
 	}
 	@Override
-	public int deleteLabels(int labelId, int id) {
+	public int deleteLabels(int labelId) {
 		Session session=sessionFactory.getCurrentSession();
 		String hql="delete from Label  where labelId=:labelId";
 		Query query=session.createQuery(hql);
@@ -66,7 +66,6 @@ public class LabelDaoImpl implements ILabelDao{
 	}
 	@Override
 	public void addLabelOnNote(Notes note) {
-
 
 		Session session = sessionFactory.getCurrentSession();
 		/*Query query = (Query) session.createQuery("insert into label_note (note)");
@@ -87,7 +86,7 @@ public class LabelDaoImpl implements ILabelDao{
 
 
 	}
-	@Override
+	/*@Override
 	public void deleteLabelFromNotes(int labelId, int noteId) {
 		Session session=sessionFactory.getCurrentSession();
 		String hql="delete from label_note  where noteId=:noteId,labelId=:labelId";
@@ -96,7 +95,7 @@ public class LabelDaoImpl implements ILabelDao{
 		query.setParameter("labelId", labelId);
 
 		query.executeUpdate();
-	}
+	}*/
 	@Override
 	public void updateLabel(Label label) {
 		Session session = sessionFactory.getCurrentSession();
