@@ -3,6 +3,9 @@
  */
 package com.bridgelab.todo.notes.controller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;//
 
+import com.bridgelab.todo.Service.JsoupDemo;
+import com.bridgelab.todo.Service.UrlInfo;
 import com.bridgelab.todo.notes.model.Notes;
 import com.bridgelab.todo.notes.service.INotesService;
 import com.bridgelab.todo.user.util.JWT_Tokens;
@@ -107,6 +112,25 @@ public class NotesController {
 	public ResponseEntity<?> handleFileDelete(HttpServletResponse response,@RequestParam int noteId){
 		notesService.deleteImage(noteId);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/*------------------------------------------------------------------------------------*/
+
+	
+	@RequestMapping(value="/getUrl", method = RequestMethod.POST)
+	public List<UrlInfo> getUrlInfo(@RequestBody List<String> urls,HttpServletRequest request) throws URISyntaxException, IOException{
+		
+		JsoupDemo jsoupDemo = new JsoupDemo();
+		UrlInfo urlInfo = null;
+		List<UrlInfo> urlData = new ArrayList<>();
+		
+		for(String url : urls) {
+			System.out.println(urls);
+			
+			urlInfo = jsoupDemo.getUrlData(url);
+			urlData.add(urlInfo);
+		}
+		return urlData;	
 	}
 
 }

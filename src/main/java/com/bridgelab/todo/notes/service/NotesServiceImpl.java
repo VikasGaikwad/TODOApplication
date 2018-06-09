@@ -64,11 +64,12 @@ public class NotesServiceImpl implements INotesService {
 	@Transactional
 	@Override
 	public void updateNotes(Notes notes, long userId) {
-
+		Notes oldNote = notesDao.getNoteById(notes.getNoteId());
 		User user = userService.getUserById(userId);
 		/* notes.setCreatedDate(notes.getCreatedDate()); */
-		notes.setUser(user);
-		notesDao.updateNotes(notes, userId);
+		notes.setUser(oldNote.getUser());
+		oldNote.updateNote(notes);
+		notesDao.updateNotes(oldNote, userId);
 	}
 
 	/*--------------------------------------------------------*/

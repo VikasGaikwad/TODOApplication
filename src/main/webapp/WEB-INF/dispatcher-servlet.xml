@@ -112,7 +112,7 @@
 	<bean id="labelService" class="com.bridgelab.todo.label.service.LabelServiceImpl"></bean>
 	<bean id="collaboratorDao" class="com.bridgelab.todo.collaborator.dao.CollaboratorDaoImpl"></bean>
 	<bean id="collaboratorService" class="com.bridgelab.todo.collaborator.service.CollaboratorServiceImpl"></bean>
-
+<bean id="urlData" class="com.bridgelab.todo.Service.UrlInfo"></bean>
 
 	<bean id="urlProperties" class="com.bridgelab.todo.user.model.UrlProperties">
 	<property name="frontEndHost" value="${frontEndHost}"></property>

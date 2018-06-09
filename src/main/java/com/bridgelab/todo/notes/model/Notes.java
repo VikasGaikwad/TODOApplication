@@ -118,6 +118,20 @@ public class Notes implements Serializable {
 		
 
 	}
+	
+	public void updateNote(Notes notes) {
+
+		this.noteId = notes.getNoteId();
+		this.title = notes.getTitle();
+		this.description = notes.getDescription();
+		this.createdDate = notes.getCreatedDate();
+		this.trash = notes.getTrash();
+		this.archive = notes.getArchive();
+		this.pin = notes.getPin();
+		this.reminder = notes.getReminder();
+		
+
+	}
 
 	/*public Notes(byte[] image) {
 
